@@ -1,17 +1,40 @@
 /* Root */
 :root {
   /*** Colors */
-  --black: #111112;
-  --black-trans: #100f0fd4;
-  --gray: #9c9aa7;
-  --white: #e9e9f1;
-  --red: #7f3d3d;
-  --red-trans: #7f3d3dea;
-  --yellow: #dfd810;
-  --blue: #2e303a;
-  --blue-trans: #2e303aea;
-  --blue-dk: #16171d;
-  --blue-gray: #43434c;
+  /* TODO - this is just  temporary color change to distinguish Bloggie Writer from Bloggie Reader, later, just make Writer more vibrant. */
+  /* --black: #111112; */
+  --black: #bebda5;
+
+  /* --black-trans: #100f0fd4; */
+  --black-trans: #bebda5d4;
+
+  /* --gray: #9c9aa7; */
+  --gray: #4f4f44;
+
+  /* --white: #e9e9f1; */
+  --white: #4f4f26;
+
+  /* --red: #7f3d3d; */
+  --red: #3aa3a3;
+
+  /* --red-trans: #7f3d3dea; */
+  /* --red-trans: #80C2C2ea; */
+
+  /* --yellow: #dfd810; */
+  --yellow: #0e57ea;
+
+  /* --blue: #2e303a; */
+  --blue: #b09718;
+
+  /* --blue-trans: #2e303aea; */
+  --blue-trans: #b09718ea;
+/* 
+  --blue-dk: #16171d; */
+  --blue-dk: #c6b558;
+
+  /* --blue-gray: #43434c; */
+  --blue-gray: #c6c684;
+
 
   /*** Fonts */
   --font-sans: system-ui, "Segoe UI", Roboto, sans-serif;
@@ -162,6 +185,7 @@ button {
   border: var(--border-basic);
   border-color: var(--red);
   border-radius: var(--spacer-big);
+  color: var(--black);
   cursor: pointer;
   font-family: var(--font-mono);
   font-size: var(--font-size-small);
@@ -366,6 +390,7 @@ input {
   border: var(--border-basic);
   border-color: var(--gray);
   border-radius: var(--spacer-big);
+  color: var(--black);
   font-size: var(--font-size-normal);
   margin-bottom: var(--spacer-big);
   padding-left: var(--space-medium);
