@@ -1,0 +1,497 @@
+/* Root */
+:root {
+  /*** Colors */
+  --black: #111112;
+  --black-trans: #100f0fd4;
+  --gray: #9c9aa7;
+  --white: #e9e9f1;
+  --red: #7f3d3d;
+  --red-trans: #7f3d3dea;
+  --yellow: #dfd810;
+  --blue: #2e303a;
+  --blue-trans: #2e303aea;
+  --blue-dk: #16171d;
+  --blue-gray: #43434c;
+
+  /*** Fonts */
+  --font-sans: system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-heading: system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, Consolas, monospace;
+
+  --font-size-title-1: 1.5rem;
+  --font-size-title-2: 1.25rem;
+  --font-size-title-3: 1.125rem;
+  --font-size-normal: 1rem;
+  --font-size-small: 0.8rem;
+
+  --font-size-close-button: 1.25rem;
+  --font-size-modal-title: 2.25rem;
+  --font-size-post-message: 1.125rem;
+
+  /*** Border */
+  --border-basic: 0.125rem solid;
+
+  /*** Spacing */
+  --spacer-big: 0.5rem;
+  --space-medium: 0.25rem;
+  --spacer-small: 0.125rem;
+
+  font: 14px/145% var(--font-sans);
+  letter-spacing: 0.18px;
+  color: var(--gray);
+  background: var(--blue-dk);
+  /* font-synthesis: none; prevents the browser from automatically creating missing font styles (like bold or italic) for a specified font*/
+  font-synthesis: none;
+  /* text-rendering: optimizeLegibility; enhances the readability of text by enabling features like kerning and ligatures, especially for larger text sizes */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* NOTE - I like this new way I am using media queries and and handling transitions between sizings */
+
+  transition: ease all 0.5s;
+
+  @media (min-width: 340px) {
+    font-size: 16px;
+  }
+
+  @media (min-width: 512px) {
+    font-size: 20px;
+  }
+
+  @media (min-width: 1024px) {
+    font-size: 24px;
+  }
+
+  @media (min-width: 2048px) {
+    font-size: 28px;
+  }
+}
+
+/* Layout */
+body {
+  margin: 0;
+}
+
+#app {
+  min-height: 100vh; /* NOTE - Fallback for older browsers */
+  min-height: 100svh;
+  width: 1126px;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border-inline: 0.125rem solid var(--blue);
+  margin: 0 auto;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--white);
+  font-family: var(--font-heading);
+  font-weight: 500;
+}
+
+h1 {
+  font-size: var(--font-size-title-1);
+}
+
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+h2 {
+  font-size: var(--font-size-title-2);
+}
+
+h3 {
+  font-size: var(--font-size-title-3);
+}
+
+header {
+  display: flex;
+  flex-direction: col;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  border: var(--border-basic);
+
+  border-radius: var(--spacer-big);
+  margin: var(--spacer-big);
+  padding: var(--spacer-big);
+}
+
+.sticky-header {
+  position: sticky;
+  top: 0;
+  /* width: 100%; */
+  /* Below fixes the issue of trying to guess what the width should be in a sticky header */
+  width: auto;
+  backdrop-filter: blur(50px);
+}
+
+.app-logo-image {
+  height: var(--font-size-title-1);
+  width: auto;
+}
+
+.logged-in {
+  background-color: var(--blue-dk);
+  border: var(--border-basic);
+  border-color: var(--red);
+  border-radius: var(--spacer-big);
+  font-family: var(--font-heading);
+}
+
+footer {
+  color: var(--gray);
+  font-family: var(--font-mono);
+  margin: var(--spacer-big);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* Buttons */
+button {
+  height: fit-content;
+  width: fit-content;
+  background-color: var(--gray);
+  border: var(--border-basic);
+  border-color: var(--red);
+  border-radius: var(--spacer-big);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-small);
+  letter-spacing: 2px;
+  padding: var(--spacer-small) var(--space-medium);
+  text-transform: uppercase;
+}
+
+button:hover {
+  background-color: var(--yellow);
+  transform: scale(1.05);
+}
+
+.close-modal-button {
+  height: 2rem;
+  width: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--red);
+  border: var(--border-basic);
+  border-color: var(--gray);
+  border-radius: 100%;
+  color: var(--gray);
+  font-size: var(--font-size-close-button);
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 0;
+  margin: 0;
+  padding: 0.5rem;
+}
+
+.close-modal-button:hover {
+  background-color: var(--gray);
+  border: var(--border-basic);
+  border-color: var(--red);
+  border-radius: 100%;
+  color: var(--red);
+  transform: scale(1.25);
+}
+
+.show-password-button {
+  display: flex;
+  background-color: var(--white);
+  border: var(--border-basic);
+  border-color: var(--gray);
+  border-radius: 50%;
+  margin-top: calc(var(--spacer-big) * -1);
+}
+
+.comment-button,
+.edit-comment-button,
+.delete-comment-button {
+  display: block;
+}
+
+.show-password-button-image {
+  height: 1rem;
+  width: auto;
+}
+
+/* Containers */
+
+/*** Basic Containers  */
+.row-container {
+  height: fit-content;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-medium);
+}
+
+/*** Specific Containers  */
+.basic-container {
+  display: flex;
+  gap: var(--spacer-big);
+}
+
+/* Posts and Comments */
+
+#posts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-big);
+  border: var(--border-basic);
+  border-color: var(--blue);
+  border-radius: var(--spacer-big);
+  margin: var(--spacer-big);
+  padding: var(--spacer-big);
+}
+
+.post-article {
+  background-color: var(--black);
+  border: var(--border-basic);
+  border-color: var(--red);
+  border-radius: var(--spacer-big);
+  padding: 1rem;
+  text-align: left;
+  text-wrap: wrap;
+}
+
+.post-article-comment {
+  display: block;
+  background-color: var(--blue-gray);
+  border: var(--border-basic);
+  border-color: var(--blue);
+  border-radius: var(--spacer-big);
+  margin: var(--spacer-big);
+  padding: var(--spacer-big);
+}
+
+.time-stamp {
+  font-size: var(--font-size-small);
+  margin: 0.35rem 0;
+  text-transform: uppercase;
+}
+
+.hr-line-post {
+  border-color: var(--red);
+}
+
+.hr-line-comment {
+  border-color: var(--blue);
+}
+
+.hr-line-warning {
+  border-color: var(--yellow);
+}
+
+.post-message,
+.post-comment-message {
+  font-family: var(--font-mono);
+}
+
+.post-message {
+  font-size: var(--font-size-post-message);
+  font-weight: 900;
+}
+
+.post-comment-message {
+  font-size: var(--font-size-normal);
+}
+
+/* Modal */
+
+#modal {
+  /* Hidden by default */
+  width: 100%; /* Full width of screen */
+  height: 100%; /* Full height of screen*/
+  display: none;
+  position: fixed; /* Stay in place */
+  left: 0;
+  top: 0;
+  background-color: var(--black-trans);
+  overflow: auto; /* Enable scroll if needed */
+  z-index: 1000;
+}
+
+.modal-content {
+  max-width: 300px;
+  background-color: var(--blue-trans);
+  border: var(--border-basic);
+  border-color: var(--gray);
+  border-radius: var(--spacer-big);
+  /* Below represents 20% from the top and centered */
+  margin: 20% auto;
+  padding: 1rem;
+  width: 75%; /* Could be more or less, depending on screen size */
+
+  @media (min-width: 512px) {
+    max-width: 350px;
+  }
+
+  @media (min-width: 1024px) {
+    max-width: 400px;
+  }
+
+  @media (min-width: 2048px) {
+    max-width: 450px;
+  }
+}
+
+/* Forms */
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  color: var(--gray);
+  font-family: var(--font-mono);
+}
+
+input {
+  height: 1.25rem;
+  /* Below works for me */
+  width: 96%;
+  background-color: var(--white);
+  border: var(--border-basic);
+  border-color: var(--gray);
+  border-radius: var(--spacer-big);
+  font-size: var(--font-size-normal);
+  margin-bottom: var(--spacer-big);
+  padding-left: var(--space-medium);
+}
+
+textarea {
+  height: 5rem;
+  width: auto;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-normal);
+  padding: var(--spacer-big);
+}
+
+.login-form,
+.signup-form,
+.profile-form {
+  align-items: start;
+  justify-content: center;
+}
+
+.login-form {
+  display: flex;
+  gap: var(--spacer-medium);
+}
+
+.signup-form,
+.profile-form {
+  display: none;
+}
+
+.login-form h1,
+.signup-form h1,
+.profile-form h1 {
+  color: var(--white);
+  font-size: var(--font-size-modal-title);
+  margin-top: 0;
+}
+
+.login-form .app-logo-image,
+.signup-form .app-logo-image,
+.profile-form .app-logo-image {
+  height: var(--font-size-modal-title);
+  width: auto;
+  margin-top: -1.595rem;
+}
+
+.login-form button .show-password-button {
+  margin-top: -0.5rem;
+}
+
+.confirm-profile-delete-form {
+  display: none;
+}
+
+.create-comment-form,
+.update-comment-form {
+  display: none;
+}
+
+.create-comment-div,
+.update-comment-div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-big);
+  border: var(--border-basic);
+  border-color: var(--blue);
+  border-radius: var(--spacer-big);
+  margin: var(--spacer-big);
+  padding: var(--spacer-big);
+}
+
+.max-char-limit {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+}
+
+/* Misc */
+
+/*** Error related  */
+.error-message {
+  color: var(--yellow);
+  font-family: var(--font-heading);
+  font-size: var(--font-size-normal);
+  margin-bottom: var(--spacer-big);
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.error-header {
+  margin-bottom: -0.5rem;
+}
+
+/* *** Flex-box related */
+.gap {
+  gap: var(--spacer-big);
+}
+
+.justify-content-end {
+  align-items: center;
+  justify-content: end;
+}
+
+.justify-content-space-between {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.justify-content-start {
+  align-items: center;
+  justify-content: start;
+}
+
+/*** Spacing related  */
+.full-width {
+  width: 100%;
+}
+
+.margin-top-bottom {
+  margin: var(--spacer-big) 0;
+}
+
+.margin-top {
+  margin-top: var(--spacer-big);
+}
+
+.margin-post-button-rows {
+  margin-top: var(--spacer-big);
+  margin-bottom: 0;
+}
