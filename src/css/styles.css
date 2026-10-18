@@ -2,44 +2,44 @@
 :root {
   /*** Colors */
   /* TODO - this is just  temporary color change to distinguish Bloggie Writer from Bloggie Reader, later, just make Writer more vibrant. */
-  /* --black: #111112; */
-  --black: #bebda5;
+  --black: #111112;
+  /* --black: #bebda5; */
 
-  /* --black-trans: #100f0fd4; */
-  --black-trans: #bebda5d4;
+  --black-trans: #100f0fd4;
+  /* --black-trans: #bebda5d4; */
 
-  /* --gray: #9c9aa7; */
-  --gray: #4f4f44;
+  --gray: #9c9aa7;
+  /* --gray: #4f4f44; */
 
-  /* --white: #e9e9f1; */
-  --white: #4f4f26;
+  --white: #e9e9f1;
+  /* --white: #4f4f26; */
 
-  /* --red: #7f3d3d; */
-  --red: #3aa3a3;
+  --red: #7f3d3d;
+  /* --red: #3aa3a3; */
 
   /* --red-trans: #7f3d3dea; */
   /* --red-trans: #80C2C2ea; */
 
-  /* --yellow: #dfd810; */
-  --yellow: #0e57ea;
+  --yellow: #dfd810;
+  /* --yellow: #0e57ea; */
 
-  /* --blue: #2e303a; */
-  --blue: #b09718;
+  --blue: #2e303a;
+  /* --blue: #b09718; */
 
-  /* --blue-trans: #2e303aea; */
-  --blue-trans: #b09718ea;
-/* 
-  --blue-dk: #16171d; */
-  --blue-dk: #c6b558;
+  --blue-trans: #2e303aea;
+  /* --blue-trans: #b09718ea; */
 
-  /* --blue-gray: #43434c; */
-  --blue-gray: #c6c684;
+  --blue-dk: #16171d; 
+  /* --blue-dk: #c6b558; */
 
+  --blue-gray: #43434c;
+  /* --blue-gray: #c6c684; */
 
   /*** Fonts */
-  --font-sans: system-ui, "Segoe UI", Roboto, sans-serif;
   --font-heading: system-ui, "Segoe UI", Roboto, sans-serif;
   --font-mono: ui-monospace, Consolas, monospace;
+  --font-sans: system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-title: ;
 
   --font-size-title-1: 1.5rem;
   --font-size-title-2: 1.25rem;
@@ -118,6 +118,7 @@ h3 {
 
 h1 {
   font-size: var(--font-size-title-1);
+  font-weight: 700;
 }
 
 h2,
@@ -135,13 +136,13 @@ h3 {
 }
 
 header {
-  display: flex;
+  /* display: flex; */
+  display: none;
   flex-direction: col;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   border: var(--border-basic);
-
   border-radius: var(--spacer-big);
   margin: var(--spacer-big);
   padding: var(--spacer-big);
@@ -150,6 +151,7 @@ header {
 .sticky-header {
   position: sticky;
   top: 0;
+  /* top: var(--spacer-big); */
   /* width: 100%; */
   /* Below fixes the issue of trying to guess what the width should be in a sticky header */
   width: auto;
@@ -227,14 +229,25 @@ button:hover {
   transform: scale(1.25);
 }
 
-.show-password-button {
+.show-password-button
+/* , .admin-button */
+ {
   display: flex;
   background-color: var(--white);
   border: var(--border-basic);
   border-color: var(--gray);
-  border-radius: 50%;
+  border-radius: 30%;
   margin-top: calc(var(--spacer-big) * -1);
 }
+
+/* .show-password-button {
+  border-color: var(--gray);
+  margin-top: calc(var(--spacer-big) * -1);
+} */
+
+/* .admin-button {
+  border-color: var(--red);
+} */
 
 .comment-button,
 .edit-comment-button,
@@ -242,7 +255,7 @@ button:hover {
   display: block;
 }
 
-.show-password-button-image {
+.show-password-button-image, .admin-button-image {
   height: 1rem;
   width: auto;
 }
@@ -404,33 +417,61 @@ textarea {
   padding: var(--spacer-big);
 }
 
-.login-form,
-.signup-form,
+.login-form-container {
+  /* height: 90svh; */
+  height: auto;
+  display: flex;
+  /* flex-direction: column; */
+  align-items: center;
+  justify-content: center;
+  /* margin: auto; */
+  /* padding: ; */
+}
+
+.login-form {
+  flex-grow: 1;
+  max-width: 500px;
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  gap: var(--spacer-medium);
+  border: var(--border-basic);
+  border-color: var(--blue);
+  border-radius: var(--spacer-big);
+  /* margin: var(--spacer-big); */
+  margin: auto;
+  padding: var(--spacer-big);
+}
+
+.login-form h1 {
+  color: var(--white);
+  font-size: var(--font-size-modal-title);
+  /* margin-top: 0; */
+}
+
+/* .signup-form, */
 .profile-form {
   align-items: start;
   justify-content: center;
 }
 
-.login-form {
-  display: flex;
-  gap: var(--spacer-medium);
-}
-
-.signup-form,
+/* .signup-form, */
 .profile-form {
   display: none;
 }
 
-.login-form h1,
-.signup-form h1,
+/* .signup-form h1, */
 .profile-form h1 {
   color: var(--white);
   font-size: var(--font-size-modal-title);
   margin-top: 0;
 }
 
-.login-form .app-logo-image,
-.signup-form .app-logo-image,
+.login-form .app-logo-image {
+    height: var(--font-size-modal-title);
+  width: auto;
+}
+/* .signup-form .app-logo-image, */
 .profile-form .app-logo-image {
   height: var(--font-size-modal-title);
   width: auto;
@@ -438,7 +479,7 @@ textarea {
 }
 
 .login-form button .show-password-button {
-  margin-top: -0.5rem;
+  /* margin-top: -0.5rem; */
 }
 
 .confirm-profile-delete-form {
@@ -484,6 +525,11 @@ textarea {
 }
 
 /* *** Flex-box related */
+
+.align-items-base {
+  align-items: baseline;
+}
+
 .gap {
   gap: var(--spacer-big);
 }
@@ -510,6 +556,10 @@ textarea {
 
 .margin-top-bottom {
   margin: var(--spacer-big) 0;
+}
+
+.margin-bottom {
+  margin-bottom: var(--spacer-big);
 }
 
 .margin-top {

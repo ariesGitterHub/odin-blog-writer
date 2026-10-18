@@ -16,6 +16,8 @@ import {
 } from "./reusables.js";
 
 export function renderLoginForm() {
+  const loginFormContainer = createElement("div", "", "login-form-container");
+
   const loginForm = createElement("form", "", "login-form");
 
   const titleRow = createDivRow("justify-content-start");
@@ -69,7 +71,8 @@ export function renderLoginForm() {
   const submitButton = createSubmitButton();
   submitButton.classList.add("full-width");
 
-  const clearButton = createClearButton();
+  // const clearButton = createClearButton(); // Making this without reusables.js to see if it works 
+  const clearButton = createButton("button", "Clear", "clear-login-form", "full-width");
 
   titleRow.append(appLogo, title);
 
@@ -79,12 +82,12 @@ export function renderLoginForm() {
 
   buttonRow.append(submitButton, clearButton);
 
-  const oopsNeedSignupButton = createButton(
-    "button",
-    "*No account? Click to sign up!",
-    "signup-instead", // This data-action triggers case of the same name in events.js
-    "full-width",
-  );
+  // const oopsNeedSignupButton = createButton(
+  //   "button",
+  //   "*No account? Click to sign up!",
+  //   "signup-instead", // This data-action triggers case of the same name in events.js
+  //   "full-width",
+  // );
 
   loginForm.append(
     titleRow,
@@ -94,124 +97,127 @@ export function renderLoginForm() {
     passwordLabel,
     passwordRow,
     buttonRow,
-    oopsNeedSignupButton,
+    // oopsNeedSignupButton,
   );
 
-  return loginForm;
+  loginFormContainer.append(loginForm);
+
+  // return loginForm;
+  return loginFormContainer;
 }
 
-export function renderSignupForm() {
-  const signupForm = createElement("form", "", "signup-form");
+// export function renderSignupForm() {
+//   const signupForm = createElement("form", "", "signup-form");
 
-  const titleRow = createDivRow("justify-content-start");
+//   const titleRow = createDivRow("justify-content-start");
 
-  const appLogo = createImage("/favicon.svg", "Quill logo", "app-logo-image");
+//   const appLogo = createImage("/favicon.svg", "Quill logo", "app-logo-image");
 
-  const title = createElement("h1", "Sign Up");
+//   const title = createElement("h1", "Sign Up");
 
-  const errorMessage = createElement(
-    "div",
-    "",
-    "error-signup",
-    "error-message",
-  );
+//   const errorMessage = createElement(
+//     "div",
+//     "",
+//     "error-signup",
+//     "error-message",
+//   );
 
-  const firstNameLabel = createLabel("first-name-signup", "First Name");
+//   const firstNameLabel = createLabel("first-name-signup", "First Name");
 
-  const firstNameInput = createInput(
-    "first-name-signup",
-    "text",
-    "first_name",
-    "Enter first name",
-    true,
-  );
+//   const firstNameInput = createInput(
+//     "first-name-signup",
+//     "text",
+//     "first_name",
+//     "Enter first name",
+//     true,
+//   );
 
-  const lastNameLabel = createLabel("last-name-signup", "Last Name");
+//   const lastNameLabel = createLabel("last-name-signup", "Last Name");
 
-  const lastNameInput = createInput(
-    "last-name-signup",
-    "text",
-    "last_name",
-    "Enter last name",
-    true,
-  );
+//   const lastNameInput = createInput(
+//     "last-name-signup",
+//     "text",
+//     "last_name",
+//     "Enter last name",
+//     true,
+//   );
 
-  const emailLabel = createLabel("email-signup", "Email");
+//   const emailLabel = createLabel("email-signup", "Email");
 
-  const emailInput = createInput(
-    "email-signup",
-    "email",
-    "email",
-    "Enter email address",
-    true,
-  );
-  emailInput.setAttribute("autocomplete", "username");
+//   const emailInput = createInput(
+//     "email-signup",
+//     "email",
+//     "email",
+//     "Enter email address",
+//     true,
+//   );
+//   emailInput.setAttribute("autocomplete", "username");
 
-  const passwordLabel = createLabel("password-signup", "Password");
+//   const passwordLabel = createLabel("password-signup", "Password");
 
-  const passwordRow = createDivRow();
+//   const passwordRow = createDivRow();
 
-  const passwordInput = createInput(
-    "password-signup",
-    "password",
-    "password",
-    "Enter password",
-    true,
-  );
-  passwordInput.setAttribute("autocomplete", "new-password");
+//   const passwordInput = createInput(
+//     "password-signup",
+//     "password",
+//     "password",
+//     "Enter password",
+//     true,
+//   );
+//   passwordInput.setAttribute("autocomplete", "new-password");
 
-  const showPasswordButton = createShowPasswordButton();
+//   const showPasswordButton = createShowPasswordButton();
 
-  const showPasswordButtonImage = createImage(
-    "/assets/eye-off.svg",
-    "an eye icon that toggles open and closed",
-    "show-password-button-image",
-  );
+//   const showPasswordButtonImage = createImage(
+//     "/assets/eye-off.svg",
+//     "an eye icon that toggles open and closed",
+//     "show-password-button-image",
+//   );
 
-  showPasswordButtonImage.setAttribute(
-    "id",
-    "show-password-button-image-signup",
-  );
+//   showPasswordButtonImage.setAttribute(
+//     "id",
+//     "show-password-button-image-signup",
+//   );
 
-  const buttonRow = createDivRow("full-width", "gap", "margin-top-bottom");
+//   const buttonRow = createDivRow("full-width", "gap", "margin-top-bottom");
 
-  const submitButton = createSubmitButton();
-  submitButton.classList.add("full-width");
+//   const submitButton = createSubmitButton();
+//   submitButton.classList.add("full-width");
 
-  const clearButton = createClearButton();
+//   const clearButton = createClearButton();
 
-  titleRow.append(appLogo, title);
+//   titleRow.append(appLogo, title);
 
-  showPasswordButton.append(showPasswordButtonImage);
+//   showPasswordButton.append(showPasswordButtonImage);
 
-  passwordRow.append(passwordInput, showPasswordButton);
+//   passwordRow.append(passwordInput, showPasswordButton);
 
-  buttonRow.append(submitButton, clearButton);
+//   buttonRow.append(submitButton, clearButton);
 
-  const oopsNeedLoginButton = createButton(
-    "button",
-    "*Already have an account? Please click here to login.",
-    "login-instead", // This data-action triggers case of the same name in events.js
-    "full-width",
-  );
+//   const oopsNeedLoginButton = createButton(
+//     "button",
+//     "*Already have an account? Please click here to login.",
+//     "login-instead", // This data-action triggers case of the same name in events.js
+//     "full-width",
+//   );
 
-  signupForm.append(
-    titleRow,
-    errorMessage,
-    firstNameLabel,
-    firstNameInput,
-    lastNameLabel,
-    lastNameInput,
-    emailLabel,
-    emailInput,
-    passwordLabel,
-    passwordRow,
-    buttonRow,
-    oopsNeedLoginButton,
-  );
+//   signupForm.append(
+//     titleRow,
+//     errorMessage,
+//     firstNameLabel,
+//     firstNameInput,
+//     lastNameLabel,
+//     lastNameInput,
+//     emailLabel,
+//     emailInput,
+//     passwordLabel,
+//     passwordRow,
+//     buttonRow,
+//     oopsNeedLoginButton,
+//   );
 
-  return signupForm;
-}
+//   return signupForm;
+// }
 
 export function renderProfileForm() {
   const profileForm = createElement("form", "", "profile-form");

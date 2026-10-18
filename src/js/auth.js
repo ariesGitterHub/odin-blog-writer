@@ -13,14 +13,14 @@ export function logout() {
   return post("/api/auth/logout");
 }
 
-export function signup(firstName, lastName, email, password) {
-  return post("/api/auth/signup", {
-    first_name: firstName,
-    last_name: lastName,
-    email,
-    password,
-  });
-}
+// export function signup(firstName, lastName, email, password) {
+//   return post("/api/auth/signup", {
+//     first_name: firstName,
+//     last_name: lastName,
+//     email,
+//     password,
+//   });
+// }
 
 export function getCurrentUser() {
   return get("/api/auth/me");

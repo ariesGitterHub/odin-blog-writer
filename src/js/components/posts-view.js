@@ -1,6 +1,7 @@
 import { createButton, createElement } from "../templates.js";
 import { formatExactDate } from "../../utils/format-date.utils.js";
 import {
+  renderLoginForm,
   renderCreateCommentForm,
   renderUpdateCommentForm,
   renderDeleteCommentForm,
@@ -9,13 +10,20 @@ import { createDivRow } from "./reusables.js";
 
 export function renderPosts(posts, currentUser) {
   const postsContainer = document.querySelector("#posts");
+  const loginForm = renderLoginForm();
 
   postsContainer.replaceChildren();
 
-  posts.forEach((post) => {
-    const postArticle = renderPost(post, currentUser);
-    postsContainer.append(postArticle);
-  });
+  if (currentUser && currentUser.role === "ADMIN" || currentUser && currentUser.role === "WRITER") {
+    posts.forEach((post) => {
+      postsContainer.style.border = "var(--border-basic)";
+      const postArticle = renderPost(post, currentUser);
+      postsContainer.append(postArticle);
+    });    
+  } else if (!currentUser) {
+    postsContainer.style.border = "none"
+    postsContainer.append(loginForm);
+  }
 }
 
 function renderPost(post, currentUser) {
@@ -25,11 +33,55 @@ function renderPost(post, currentUser) {
 
   const postTimestamp = renderTimestamp(post.createdAt, post.updatedAt);
 
-  const postMessage = createElement("p", post.postMessage, "post-message");
+  const editButtonRow = createDivRow(
+    "justify-content-start",
+    "margin-post-button-rows",
+  );
+
+    // TODO - this is a temp dummy button
+  const publishPostButton = createButton(
+    "button",
+    "Publish",
+    "dummy",
+    "dummy",
+  );
+
+
+  const editPostButton = createButton(
+    "button",
+    "Edit",
+    "open-update-post-form", // This data-action triggers case of the same name in events.js
+    "edit-post-button",
+  );
+
+  // TODO - this is a temp dummy button
+  const deletePostButton = createButton(
+    "button",
+    "Delete",
+    "dummy",
+    "dummy",
+  );
+
+
+  // const deletePostButton = renderDeletePostForm(post.id); // TODO - create this, then delete dummy button above
 
   const hrLine = createElement("hr", "", "hr-line-post");
 
-  postArticle.append(postTitle, postTimestamp, hrLine, postMessage);
+  const postMessage = createElement("p", post.postMessage, "post-message");
+
+  editButtonRow.append(
+    publishPostButton,
+    editPostButton,
+    deletePostButton,
+  );
+
+  postArticle.append(
+    postTitle,
+    postTimestamp,
+    editButtonRow,
+    hrLine,
+    postMessage,
+  );
 
   if (currentUser) {
     const commentButtonRow = createDivRow(
@@ -62,7 +114,7 @@ function renderPost(post, currentUser) {
     );
     postArticle.append(renderExistingComment, renderUpdateComment);
   });
-
+  
   return postArticle;
 }
 

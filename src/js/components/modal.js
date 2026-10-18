@@ -1,8 +1,8 @@
 import { createButton, createElement } from "../templates.js";
 
 import {
-  renderLoginForm,
-  renderSignupForm,
+  // renderLoginForm,
+  // renderSignupForm,
   renderProfileForm,
   renderConfirmProfileDeleteForm,
 } from "./forms.js";
@@ -27,15 +27,15 @@ export function renderModal() {
 
   buttonRow.append(closeModalButton);
 
-  const loginForm = renderLoginForm();
-  const signupForm = renderSignupForm();
+  // const loginForm = renderLoginForm();
+  // const signupForm = renderSignupForm();
   const profileForm = renderProfileForm();
   const profileDeleteForm = renderConfirmProfileDeleteForm();
 
   modalContent.append(
     buttonRow,
-    loginForm,
-    signupForm,
+    // loginForm,
+    // signupForm,
     profileForm,
     profileDeleteForm,
   );

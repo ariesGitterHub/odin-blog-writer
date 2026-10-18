@@ -1,4 +1,7 @@
-import { login, logout, signup } from "./auth.js";
+import { 
+  login,
+   logout,
+   } from "./auth.js";
 import { updateProfile, deleteProfile } from "./user.js";
 import {
   createNewBlogComment,
@@ -6,18 +9,19 @@ import {
   deleteBlogComment,
 } from "./comments.js";
 import { renderHeader } from "./components/header.js";
-import { getPublishedBlogPosts } from "../js/posts.js";
+import { getBlogPosts } from "../js/posts.js";
 import { renderPosts } from "./components/posts-view.js";
 import { state } from "./state.js";
 
 export function registerEventListeners() {
   const app = document.querySelector("#app");
 
+  const headerContainer = document.querySelector("header");
+
   const modalContainer = document.querySelector("#modal");
 
   // Modal forms
   const loginForm = document.querySelector(".login-form");
-  const signupForm = document.querySelector(".signup-form");
   const profileForm = document.querySelector(".profile-form");
   const confirmProfileDeleteForm = document.querySelector(
     ".confirm-profile-delete-form",
@@ -30,7 +34,6 @@ export function registerEventListeners() {
 
   // Error message divs found on various forms
   const errorMessageLogin = document.querySelector(".error-login");
-  const errorMessageSignup = document.querySelector(".error-signup");
   const errorMessageProfile = document.querySelector(".error-profile");
   const errorMessageConfirmProfileDelete = document.querySelector(
     ".error-confirm-profile-delete",
@@ -39,16 +42,13 @@ export function registerEventListeners() {
 
   // Needed for show-password-button
   const passwordLogin = document.querySelector("#password-login");
-  const passwordSignup = document.querySelector("#password-signup");
   const passwordProfile = document.querySelector("#password-profile");
 
   // NOTE - I took the easy road and simply used the id for the DOM elements below rather than use closest or querySelectorAll
   const showPasswordButtonImageLogin = document.querySelector(
     "#show-password-button-image-login",
   );
-  const showPasswordButtonImageSignup = document.querySelector(
-    "#show-password-button-image-signup",
-  );
+
   const showPasswordButtonImageProfile = document.querySelector(
     "#show-password-button-image-profile",
   );
@@ -61,7 +61,7 @@ export function registerEventListeners() {
   const emailProfileInput = profileForm.querySelector("#email-profile");
   const passwordProfileInput = profileForm.querySelector("#password-profile");
 
-  // Helper function for showing password in login, signup, and profile update forms; allows me to delete confirm password fields and reduce coding baggage
+  // Helper function for showing password in login and profile update forms; allows me to delete confirm password fields and reduce coding baggage
   function togglePasswordVisibility(passwordInput, eyeImage) {
     if (passwordInput.type === "password") {
       passwordInput.type = "text";
@@ -135,7 +135,7 @@ export function registerEventListeners() {
   }
 
   async function refreshPosts() {
-    const postData = await getPublishedBlogPosts();
+    const postData = await getBlogPosts();
 
     state.posts = postData.posts;
 
@@ -150,48 +150,9 @@ export function registerEventListeners() {
     const action = button.dataset.action;
 
     switch (action) {
-      case "open-modal-login":
-        // Used to open the modal via the login button, always starts with the login form, other forms should not display
-        modalContainer.style.display = "block";
-
-        loginForm.style.display = "flex";
-        signupForm.style.display = "none";
-        profileForm.style.display = "none";
-        confirmProfileDeleteForm.style.display = "none";
-
-        passwordLogin.type = "password";
-        break;
-
-      case "signup-instead":
-        // Switches to the signup form on the modal while the modal is open, other forms should not display
-        loginForm.style.display = "none";
-        signupForm.style.display = "flex";
-        profileForm.style.display = "none";
-        confirmProfileDeleteForm.style.display = "none";
-        passwordSignup.type = "password";
-        showPasswordButtonImageSignup.src = "/assets/eye-off.svg";
-
-        loginForm.reset();
-        break;
-
-      case "login-instead":
-        // Switches back to login form while the modal is open and no one is logged in
-        loginForm.style.display = "flex";
-        signupForm.style.display = "none";
-        profileForm.style.display = "none";
-        confirmProfileDeleteForm.style.display = "none";
-        passwordLogin.type = "password";
-        showPasswordButtonImageLogin.src = "/assets/eye-off.svg";
-
-        signupForm.reset();
-        break;
-
       case "open-modal-profile":
         // Used to open the modal via the profile button after someone logs in, but this time only shows the profile form.
         modalContainer.style.display = "block";
-
-        loginForm.style.display = "none";
-        signupForm.style.display = "none";
         profileForm.style.display = "flex";
         confirmProfileDeleteForm.style.display = "none";
         passwordProfile.type = "password";
@@ -206,36 +167,30 @@ export function registerEventListeners() {
 
       case "close-modal":
         modalContainer.style.display = "none";
-        errorMessageLogin.textContent = "";
-        errorMessageSignup.textContent = "";
         errorMessageProfile.textContent = "";
         errorMessageConfirmProfileDelete.textContent = "";
         errorMessageHeader.textContent = ""; // TODO - check this to make sure it works
         break;
 
-      case "clear-form":
-        // Clears all the error messages generically as a catch all button; there was an issue with signup errors persisting
-        errorMessageLogin.textContent = "";
-        errorMessageSignup.textContent = "";
+      case "clear-form":  // TODO - make sure these are all used
+        // Clears all the error messages generically as a catch all button; there was an issue with errors persisting
         errorMessageProfile.textContent = "";
         errorMessageConfirmProfileDelete.textContent = "";
         errorMessageHeader.textContent = ""; // TODO - check this to make sure it works
 
-        loginForm.reset();
-        signupForm.reset();
+        loginForm.reset(); // ???
         profileForm.reset();
         break;
 
-      case "show-password-toggle":
-        if (loginForm.style.display === "flex") {
-          togglePasswordVisibility(passwordLogin, showPasswordButtonImageLogin);
-        }
+      case "clear-login-form":
+        // Clears all the error messages generically as a catch all button; there was an issue with errors persisting
+        errorMessageLogin.textContent = "";
+        loginForm.reset();
+        break;
 
-        if (signupForm.style.display === "flex") {
-          togglePasswordVisibility(
-            passwordSignup,
-            showPasswordButtonImageSignup,
-          );
+      case "show-password-toggle":
+        if (loginForm) {
+          togglePasswordVisibility(passwordLogin, showPasswordButtonImageLogin);
         }
 
         if (profileForm.style.display === "flex") {
@@ -277,16 +232,18 @@ export function registerEventListeners() {
           // Clear the state.currentUser
           state.currentUser = null;
 
-          // Refresh header
+          // Refresh header and login-splash
           renderHeader(state.currentUser);
+          // renderLoginSplash(state.currentUser);
+          headerContainer.style.display = "none";
 
           // Refresh state.posts and posts
+          // This will also reset opening login form
           await refreshPosts();
 
           // Reset the forms so no data lingers on a subsequent viewing
           loginForm.reset();
-          signupForm.reset();
-
+          location.reload() // TODO - remove later
           console.log("✋ Logged out, goodbye!");
         } catch (err) {
           console.error("Logout failed:", err);
@@ -305,10 +262,8 @@ export function registerEventListeners() {
     // Multiple forms used in this app
     if (
       form !== loginForm &&
-      form !== signupForm &&
       form !== profileForm &&
       form !== confirmProfileDeleteForm &&
-      // form !== createCommentForm
       form !== createCommentForm &&
       !form.matches(".create-comment-form") &&
       form !== updateCommentForm &&
@@ -327,12 +282,12 @@ export function registerEventListeners() {
       try {
         const loginData = await login(emailLogin, passwordLogin);
 
-        const postData = await getPublishedBlogPosts();
+        const postData = await getBlogPosts();
 
         // Set the state.currentUser
         state.currentUser = loginData.user;
 
-        // Refresh state.posts and posts
+        // Refresh header and login-splash
         renderHeader(state.currentUser);
 
         // Refresh state.posts and posts
@@ -344,47 +299,12 @@ export function registerEventListeners() {
 
         // Reset all forms
         loginForm.reset();
-        signupForm.reset();
-        profileForm.reset();
+        // profileForm.reset(); 
 
         console.log("🎈 Login successful:", state.currentUser);
       } catch (err) {
         console.error("Login failed:", err);
         errorMessageLogin.textContent = err.message;
-      }
-    }
-
-    if (form === signupForm) {
-      const firstNameSignupInput =
-        form.querySelector("#first-name-signup").value;
-      const lastNameSignupInput = form.querySelector("#last-name-signup").value;
-      const emailSignupInput = form.querySelector("#email-signup").value;
-      const passwordSignupInput = form.querySelector("#password-signup").value;
-
-      try {
-        const signupData = await signup(
-          firstNameSignupInput,
-          lastNameSignupInput,
-          emailSignupInput,
-          passwordSignupInput,
-        );
-
-        // NOTE - below immediately takes the signup person to the login form so they can actually log with the new signup info they created
-        loginForm.style.display = "flex";
-        signupForm.style.display = "none";
-        profileForm.style.display = "none";
-
-        errorMessageSignup.textContent = "";
-
-        // Reset all forms
-        loginForm.reset();
-        signupForm.reset();
-        profileForm.reset();
-
-        console.log("✍ Signup successful:", state.currentUser);
-      } catch (err) {
-        console.error("Signup failed:", err);
-        errorMessageSignup.textContent = err.message;
       }
     }
 
@@ -413,7 +333,6 @@ export function registerEventListeners() {
 
         // Reset all forms
         loginForm.reset();
-        signupForm.reset();
         profileForm.reset();
 
         console.log("😀 Profile update successful:", state.currentUser);
@@ -441,7 +360,6 @@ export function registerEventListeners() {
 
         // Reset all forms
         loginForm.reset();
-        signupForm.reset();
         profileForm.reset();
 
         console.log("💀 User account deleted");
