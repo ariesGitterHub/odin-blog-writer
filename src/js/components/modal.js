@@ -2,7 +2,6 @@ import { createButton, createElement } from "../templates.js";
 
 import {
   // renderLoginForm,
-  // renderSignupForm,
   renderProfileForm,
   renderConfirmProfileDeleteForm,
 } from "./forms.js";
@@ -11,7 +10,7 @@ import { createDivRow } from "./reusables.js";
 export function renderModal() {
   const modalContainer = document.querySelector("#modal");
 
-  // Clear previous #modal
+  // Clear the previous children
   modalContainer.replaceChildren();
 
   const modalContent = createElement("div", "", "modal-content");
@@ -28,14 +27,12 @@ export function renderModal() {
   buttonRow.append(closeModalButton);
 
   // const loginForm = renderLoginForm();
-  // const signupForm = renderSignupForm();
   const profileForm = renderProfileForm();
   const profileDeleteForm = renderConfirmProfileDeleteForm();
 
   modalContent.append(
     buttonRow,
     // loginForm,
-    // signupForm,
     profileForm,
     profileDeleteForm,
   );

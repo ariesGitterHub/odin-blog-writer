@@ -43,7 +43,7 @@
 
   --font-size-title-1: 1.5rem;
   --font-size-title-2: 1.25rem;
-  --font-size-title-3: 1.125rem;
+  --font-size-title-3: .75rem;
   --font-size-normal: 1rem;
   --font-size-small: 0.8rem;
 
@@ -133,11 +133,12 @@ h2 {
 
 h3 {
   font-size: var(--font-size-title-3);
+  text-transform: uppercase;
 }
 
 header {
-  /* display: flex; */
-  display: none;
+  display: flex;
+  /* display: none; */
   flex-direction: col;
   flex-wrap: wrap;
   align-items: center;
@@ -159,8 +160,10 @@ header {
 }
 
 .app-logo-image {
-  height: var(--font-size-title-1);
+  /* height: var(--font-size-title-1); */
+  height: 1.25rem;
   width: auto;
+  /* margin:0; */
 }
 
 .logged-in {
@@ -281,10 +284,21 @@ button:hover {
 
 /* Posts and Comments */
 
+#login {
+  /* height: 100vh; */
+  width: auto;
+  display: flex;
+  /* flex-direction: column; */
+  align-items: center;
+  justify-content: center;
+  /* margin: 30% auto; */
+}
+
 #posts {
   display: flex;
   flex-direction: column;
   gap: var(--spacer-big);
+  /* TODO - figure below out later */
   border: var(--border-basic);
   border-color: var(--blue);
   border-radius: var(--spacer-big);
@@ -302,6 +316,13 @@ button:hover {
   text-wrap: wrap;
 }
 
+.post-details-row{
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 0;
+}
+
 .post-article-comment {
   display: block;
   background-color: var(--blue-gray);
@@ -312,9 +333,9 @@ button:hover {
   padding: var(--spacer-big);
 }
 
-.time-stamp {
+.post-author, .time-stamp {
   font-size: var(--font-size-small);
-  margin: 0.35rem 0;
+  /* margin: 0.35rem 0; */
   text-transform: uppercase;
 }
 
@@ -417,16 +438,12 @@ textarea {
   padding: var(--spacer-big);
 }
 
-.login-form-container {
-  /* height: 90svh; */
+/* .login-form-container {
   height: auto;
   display: flex;
-  /* flex-direction: column; */
   align-items: center;
   justify-content: center;
-  /* margin: auto; */
-  /* padding: ; */
-}
+} */
 
 .login-form {
   flex-grow: 1;
@@ -438,29 +455,27 @@ textarea {
   border: var(--border-basic);
   border-color: var(--blue);
   border-radius: var(--spacer-big);
-  /* margin: var(--spacer-big); */
-  margin: auto;
-  padding: var(--spacer-big);
+  margin: var(--spacer-big);
+  /* margin: auto; */
+  padding: 0 var(--spacer-big);
 }
 
 .login-form h1 {
   color: var(--white);
   font-size: var(--font-size-modal-title);
-  /* margin-top: 0; */
+  /* margin-top: 0.5rem; */
+  margin: 0;
 }
 
-/* .signup-form, */
 .profile-form {
   align-items: start;
   justify-content: center;
 }
 
-/* .signup-form, */
 .profile-form {
   display: none;
 }
 
-/* .signup-form h1, */
 .profile-form h1 {
   color: var(--white);
   font-size: var(--font-size-modal-title);
@@ -468,14 +483,16 @@ textarea {
 }
 
 .login-form .app-logo-image {
-    height: var(--font-size-modal-title);
+    /* height: var(--font-size-modal-title); */
+    height: 1.75rem;
   width: auto;
 }
-/* .signup-form .app-logo-image, */
+
 .profile-form .app-logo-image {
-  height: var(--font-size-modal-title);
+  /* height: var(--font-size-modal-title); */
+  height: 1.75rem;
   width: auto;
-  margin-top: -1.595rem;
+  margin-top: -1.25rem;
 }
 
 .login-form button .show-password-button {
@@ -515,7 +532,8 @@ textarea {
   color: var(--yellow);
   font-family: var(--font-heading);
   font-size: var(--font-size-normal);
-  margin-bottom: var(--spacer-big);
+  /* margin-bottom: var(--spacer-big); */
+  margin: var(--spacer-big) 0;
   text-align: left;
   text-transform: uppercase;
 }

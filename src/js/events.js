@@ -8,16 +8,19 @@ import {
   editBlogComment,
   deleteBlogComment,
 } from "./comments.js";
+
+
 import { renderHeader } from "./components/header.js";
 import { getBlogPosts } from "../js/posts.js";
 import { renderPosts } from "./components/posts-view.js";
 import { state } from "./state.js";
+import { loginSplash } from "./components/login-view.js";
 
 export function registerEventListeners() {
   const app = document.querySelector("#app");
 
   const headerContainer = document.querySelector("header");
-
+  const loginContainer = document.querySelector("#login");
   const modalContainer = document.querySelector("#modal");
 
   // Modal forms
@@ -228,21 +231,13 @@ export function registerEventListeners() {
       case "logout":
         try {
           await logout();
+          // Reset the forms so no data lingers on a subsequent viewing          
+          // loginForm.reset();
 
-          // Clear the state.currentUser
+          // Clear the states for posts and currentUser
           state.currentUser = null;
-
-          // Refresh header and login-splash
-          renderHeader(state.currentUser);
-          // renderLoginSplash(state.currentUser);
-          headerContainer.style.display = "none";
-
-          // Refresh state.posts and posts
-          // This will also reset opening login form
-          await refreshPosts();
-
-          // Reset the forms so no data lingers on a subsequent viewing
-          loginForm.reset();
+          state.posts = null
+          
           location.reload() // TODO - remove later
           console.log("✋ Logged out, goodbye!");
         } catch (err) {
@@ -281,25 +276,17 @@ export function registerEventListeners() {
 
       try {
         const loginData = await login(emailLogin, passwordLogin);
-
-        const postData = await getBlogPosts();
-
-        // Set the state.currentUser
         state.currentUser = loginData.user;
 
-        // Refresh header and login-splash
+        const postData = await getBlogPosts();
+        state.posts = postData.posts;
+
         renderHeader(state.currentUser);
+        renderPosts(state.posts, state.currentUser);
 
-        // Refresh state.posts and posts
-        await refreshPosts();
-
-        modalContainer.style.display = "none";
-
-        errorMessageLogin.textContent = "";
-
-        // Reset all forms
         loginForm.reset();
-        // profileForm.reset(); 
+        errorMessageLogin.textContent = "";
+        loginContainer.style.display = "none";
 
         console.log("🎈 Login successful:", state.currentUser);
       } catch (err) {

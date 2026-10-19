@@ -1,35 +1,50 @@
 import { createButton, createElement } from "../templates.js";
 import { formatExactDate } from "../../utils/format-date.utils.js";
 import {
-  renderLoginForm,
+  // renderLoginForm,
   renderCreateCommentForm,
   renderUpdateCommentForm,
   renderDeleteCommentForm,
 } from "./forms.js";
 import { createDivRow } from "./reusables.js";
 
+// const userRoleMessage = createElement(
+//   "p",
+//   "☹️ Oops! It looks like you are currently a 'Bloggie Reader' user, but you aren't currently able to draft posts on 'Bloggie Writer.' You may still logout or make changes to your profile from this site.",
+//   "error-message",
+// );
+
 export function renderPosts(posts, currentUser) {
   const postsContainer = document.querySelector("#posts");
-  const loginForm = renderLoginForm();
 
+  // Clear the previous children
   postsContainer.replaceChildren();
 
-  if (currentUser && currentUser.role === "ADMIN" || currentUser && currentUser.role === "WRITER") {
-    posts.forEach((post) => {
-      postsContainer.style.border = "var(--border-basic)";
-      const postArticle = renderPost(post, currentUser);
-      postsContainer.append(postArticle);
-    });    
-  } else if (!currentUser) {
-    postsContainer.style.border = "none"
-    postsContainer.append(loginForm);
-  }
+  posts.forEach((post) => {
+    // postsContainer.style.border = "var(--border-basic)";
+    const postArticle = renderPost(post, currentUser);
+    postsContainer.append(postArticle);
+  });
 }
 
 function renderPost(post, currentUser) {
   const postArticle = createElement("article", "", "post-article");
 
   const postTitle = createElement("h2", post.postTitle);
+
+  const postDetailsRow = createElement(
+    "div",
+    "",
+    "row-container",
+    "justify-contents-start",
+    "post-details-row",
+  );
+
+  const postAuthor = createElement(
+    "p",
+    `By: ${post.user.firstName} ${post.user.lastName}`,
+    "post-author",
+  );
 
   const postTimestamp = renderTimestamp(post.createdAt, post.updatedAt);
 
@@ -38,14 +53,8 @@ function renderPost(post, currentUser) {
     "margin-post-button-rows",
   );
 
-    // TODO - this is a temp dummy button
-  const publishPostButton = createButton(
-    "button",
-    "Publish",
-    "dummy",
-    "dummy",
-  );
-
+  // TODO - this is a temp dummy button
+  const publishPostButton = createButton("button", "Publish", "dummy", "dummy");
 
   const editPostButton = createButton(
     "button",
@@ -55,13 +64,7 @@ function renderPost(post, currentUser) {
   );
 
   // TODO - this is a temp dummy button
-  const deletePostButton = createButton(
-    "button",
-    "Delete",
-    "dummy",
-    "dummy",
-  );
-
+  const deletePostButton = createButton("button", "Delete", "dummy", "dummy");
 
   // const deletePostButton = renderDeletePostForm(post.id); // TODO - create this, then delete dummy button above
 
@@ -69,15 +72,15 @@ function renderPost(post, currentUser) {
 
   const postMessage = createElement("p", post.postMessage, "post-message");
 
-  editButtonRow.append(
-    publishPostButton,
-    editPostButton,
-    deletePostButton,
-  );
+  postDetailsRow.append(postAuthor, postTimestamp);
+
+  editButtonRow.append(publishPostButton, editPostButton, deletePostButton);
 
   postArticle.append(
     postTitle,
-    postTimestamp,
+    // postAuthor,
+    // postTimestamp,
+    postDetailsRow,
     editButtonRow,
     hrLine,
     postMessage,
@@ -114,7 +117,7 @@ function renderPost(post, currentUser) {
     );
     postArticle.append(renderExistingComment, renderUpdateComment);
   });
-  
+
   return postArticle;
 }
 
