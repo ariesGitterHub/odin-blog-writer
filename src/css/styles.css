@@ -113,18 +113,15 @@ h2,
 h3 {
   color: var(--white);
   font-family: var(--font-heading);
-  font-weight: 500;
+}
+
+h2, h3 {
+  font-weight: 500;  
 }
 
 h1 {
   font-size: var(--font-size-title-1);
   font-weight: 700;
-}
-
-h2,
-h3,
-p {
-  margin: 0;
 }
 
 h2 {
@@ -134,6 +131,14 @@ h2 {
 h3 {
   font-size: var(--font-size-title-3);
   text-transform: uppercase;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+  padding: 0
 }
 
 header {
@@ -149,21 +154,27 @@ header {
   padding: var(--spacer-big);
 }
 
+header .error-message {
+  margin: 0;
+}
+
 .sticky-header {
   position: sticky;
   top: 0;
   /* top: var(--spacer-big); */
   /* width: 100%; */
   /* Below fixes the issue of trying to guess what the width should be in a sticky header */
-  width: auto;
+  /* width: auto; */
+  width: auto 0;
   backdrop-filter: blur(50px);
+  /* border: none; */
 }
 
 .app-logo-image {
   /* height: var(--font-size-title-1); */
   height: 1.25rem;
   width: auto;
-  /* margin:0; */
+  margin: 0;
 }
 
 .logged-in {
@@ -232,25 +243,24 @@ button:hover {
   transform: scale(1.25);
 }
 
-.show-password-button
-/* , .admin-button */
+.show-password-button, .admin-button
  {
   display: flex;
-  background-color: var(--white);
   border: var(--border-basic);
   border-color: var(--gray);
   border-radius: 30%;
+  /* margin-top: calc(var(--spacer-big) * -1); */
+}
+
+.show-password-button {
+  background-color: var(--white);
+  border-color: var(--gray);
   margin-top: calc(var(--spacer-big) * -1);
 }
 
-/* .show-password-button {
-  border-color: var(--gray);
-  margin-top: calc(var(--spacer-big) * -1);
-} */
-
-/* .admin-button {
+.admin-button {
   border-color: var(--red);
-} */
+}
 
 .comment-button,
 .edit-comment-button,
@@ -263,11 +273,19 @@ button:hover {
   width: auto;
 }
 
+.publish-post-button {
+  color: var(--gray);
+}
+
+.publish-post-button:hover {
+  color: var(--yellow);
+}
+
 /* Containers */
 
 /*** Basic Containers  */
 .row-container {
-  height: fit-content;
+  height: 2rem;
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -277,10 +295,10 @@ button:hover {
 }
 
 /*** Specific Containers  */
-.basic-container {
+/* .basic-container {
   display: flex;
   gap: var(--spacer-big);
-}
+} */
 
 /* Posts and Comments */
 
@@ -316,11 +334,12 @@ button:hover {
   text-wrap: wrap;
 }
 
-.post-details-row{
+.post-details-row {
   display: flex;
   flex-direction: column;
   align-items: start;
   gap: 0;
+  margin-top: var(--spacer-big);
 }
 
 .post-article-comment {
@@ -460,39 +479,41 @@ textarea {
   padding: 0 var(--spacer-big);
 }
 
-.login-form h1 {
+.login-form h1, .profile-form h1 {
   color: var(--white);
   font-size: var(--font-size-modal-title);
   /* margin-top: 0.5rem; */
   margin: 0;
 }
 
-.profile-form {
+/* .profile-form {
   align-items: start;
   justify-content: center;
-}
+} */
 
 .profile-form {
   display: none;
 }
 
 .profile-form h1 {
-  color: var(--white);
-  font-size: var(--font-size-modal-title);
-  margin-top: 0;
+  /* color: var(--white);
+  font-size: var(--font-size-modal-title); */
+  /* margin-top: -0.125rem; */
 }
 
-.login-form .app-logo-image {
-    /* height: var(--font-size-modal-title); */
-    height: 1.75rem;
+.login-form .app-logo-image,
+.profile-form .app-logo-image {
+  /* height: var(--font-size-modal-title); */
+  height: 1.65rem;
   width: auto;
+  margin-top: 0.15rem
 }
 
 .profile-form .app-logo-image {
   /* height: var(--font-size-modal-title); */
-  height: 1.75rem;
-  width: auto;
-  margin-top: -1.25rem;
+  /* height: 1.75rem; */
+  /* width: auto; */
+  /* margin-top: -1.25rem; */
 }
 
 .login-form button .show-password-button {
@@ -503,21 +524,40 @@ textarea {
   display: none;
 }
 
+.create-post-form,
 .create-comment-form,
 .update-comment-form {
   display: none;
 }
 
+.create-post-form {
+  width: 100%;
+  border: none;
+  color: gold;
+}
+
+.create-post-div,
 .create-comment-div,
 .update-comment-div {
   display: flex;
   flex-direction: column;
   gap: var(--spacer-big);
+  /* margin: var(--spacer-big); */
+  
+}
+
+.create-comment-div,
+.update-comment-div {
   border: var(--border-basic);
   border-color: var(--blue);
   border-radius: var(--spacer-big);
   margin: var(--spacer-big);
   padding: var(--spacer-big);
+  /* padding: var(--spacer-big); */
+}
+
+.create-post-div {
+  margin-top: var(--spacer-big);
 }
 
 .max-char-limit {
@@ -538,15 +578,15 @@ textarea {
   text-transform: uppercase;
 }
 
-.error-header {
+/* .error-header {
   margin-bottom: -0.5rem;
-}
+} */
 
 /* *** Flex-box related */
 
-.align-items-base {
+/* .align-items-base {
   align-items: baseline;
-}
+} */
 
 .gap {
   gap: var(--spacer-big);
@@ -579,7 +619,11 @@ textarea {
 .margin-bottom {
   margin-bottom: var(--spacer-big);
 }
-
+/* 
+.margin-top-zero {
+  margin-top: 0;
+  padding: 0;
+} */
 .margin-top {
   margin-top: var(--spacer-big);
 }

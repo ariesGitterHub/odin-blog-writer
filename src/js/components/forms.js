@@ -256,6 +256,74 @@ export function renderConfirmProfileDeleteForm() {
   return confirmProfileDeleteForm;
 }
 
+// Blog post forms
+export function renderCreatePostForm(postId) {
+    const createPostForm = createElement("form", "", "create-post-form");
+    // createCommentForm.id = postId;
+
+    const postDiv = createElement("div", "", "create-post-div");
+
+    const postTitleLabel = createLabel("create-post-title", "New Post Title");
+
+    const postTitleInput = createInput(
+      "create-post-title",
+      "text",
+      "post_title",
+      "Enter new post title",
+      true,
+    );
+
+    const messageRow = createDivRow("gap", "justify-content-start");
+
+    const maxCharLimitMessage = createElement(
+      "p",
+      "255 Character Limit",
+      "max-char-limit",
+    );
+    maxCharLimitMessage.id = `max-char-limit-${postId}`;
+    // maxCharLimitMessage.id = `max-char-limit-create-post`;
+
+    const textArea = createElement("textarea", "");
+    textArea.id = `textarea-${postId}`;
+    textArea.name = "comment_message";
+    textArea.maxLength = 255;
+
+    const buttonRow = createDivRow("justify-content-end");
+
+    const submitButton = createSubmitButton();
+    // submitButton.dataset.postId = postId;
+
+    const cancelButton = createButton(
+      "button",
+      "Cancel",
+      "cancel-new-post-form", // This data-action triggers case of the same name in events.js
+      // TODO - add above to events.js
+    );
+
+    // cancelButton.dataset.postId = postId;
+
+    messageRow.append(maxCharLimitMessage);
+
+    buttonRow.append(submitButton, cancelButton);
+    postDiv.append(
+      postTitleLabel,
+      postTitleInput,
+      messageRow,
+      textArea,
+      buttonRow,
+    );
+    createPostForm.append(postDiv);
+
+    return createPostForm;
+}
+
+export function renderEditPostForm(postId, published, postTitle, postMessage) {}
+
+export function renderTogglePublishedForm(postId, published) {}
+
+export function renderDeletePostForm(postId) {}
+
+// Blog comment forms (on posts)
 export function renderCreateCommentForm(postId) {
   const createCommentForm = createElement("form", "", "create-comment-form");
   createCommentForm.id = postId;

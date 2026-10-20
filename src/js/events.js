@@ -3,6 +3,11 @@ import {
    logout,
    } from "./auth.js";
 import { updateProfile, deleteProfile } from "./user.js";
+
+import {
+  createNewBlogPost
+} from "./posts.js";
+
 import {
   createNewBlogComment,
   editBlogComment,
@@ -23,12 +28,17 @@ export function registerEventListeners() {
   const loginContainer = document.querySelector("#login");
   const modalContainer = document.querySelector("#modal");
 
-  // Modal forms
+  // Initial splash page
   const loginForm = document.querySelector(".login-form");
+
+  // Modal forms
   const profileForm = document.querySelector(".profile-form");
   const confirmProfileDeleteForm = document.querySelector(
     ".confirm-profile-delete-form",
   );
+
+  // Header form
+  const createPostForm = document.querySelector(".create-post-form");
 
   // Post-view forms
   const createCommentForm = document.querySelector(".create-comment-form");
@@ -73,6 +83,22 @@ export function registerEventListeners() {
       passwordInput.type = "password";
       eyeImage.src = "/assets/eye-off.svg";
     }
+  }
+
+  function openCreatePostForm(button) {
+    const postId = "create-post";
+    // Using a class for this rather than an id
+    const createPostForm = document.querySelector(".create-post-form");
+    createPostForm.reset();
+    createPostForm.style.display = "flex";
+
+    charCount(postId);
+  }
+
+  function cancelCreatePostForm(button) {
+    // Using a class for this rather than an id
+    const createPostForm = document.querySelector(".create-post-form");
+    createPostForm.style.display = "none";
   }
 
   function openCreateCommentForm(button) {
@@ -212,6 +238,14 @@ export function registerEventListeners() {
         confirmProfileDeleteForm.style.display = "none";
         break;
 
+      case "open-new-post-form":
+        openCreatePostForm(button);
+        break;
+        
+      case "cancel-new-post-form":
+        cancelCreatePostForm(button);
+        break;
+
       case "open-create-comment-form":
         openCreateCommentForm(button);
         break;
@@ -262,6 +296,7 @@ export function registerEventListeners() {
       form !== loginForm &&
       form !== profileForm &&
       form !== confirmProfileDeleteForm &&
+      form !== createPostForm &&
       form !== createCommentForm &&
       !form.matches(".create-comment-form") &&
       form !== updateCommentForm &&
@@ -356,6 +391,42 @@ export function registerEventListeners() {
       } catch (err) {
         console.error("Profile account deletion failed:", err);
         errorMessageConfirmProfileDelete.textContent = err.message;
+      }
+    }
+
+    // Create Comment
+    if (form.matches(".create-post-form")) {
+      const postId = "create-post";
+
+      const postTitleInput = form.querySelector("#create-post-title");
+
+      const postDraftTextArea = form.querySelector(
+        `#textarea-${postId}`,
+      );
+
+      const postDraftTitle = postTitleInput.value;
+      console.log("postDraftTitle", postDraftTitle);
+      
+
+      const postDraftMessage = postDraftTextArea.value;
+
+      try {
+        const postData = await createNewBlogPost(
+          // userId, Not needed, backend handles this
+          // postId,
+          postDraftTitle,
+          postDraftMessage,
+        );
+
+        // Refresh state.posts and posts
+        await refreshPosts();
+
+        createPostForm.style.display = "none";
+        createPostForm.reset()
+        console.log("Post created", postData);
+      } catch (err) {
+        console.error("Post creation failed:", err);
+        errorMessageHeader.textContent = err.message;
       }
     }
 

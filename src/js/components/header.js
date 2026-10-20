@@ -1,5 +1,7 @@
 import { createButton, createElement, createImage } from "../templates.js";
 import { createDivRow } from "./reusables.js";
+import { renderCreatePostForm } from "./forms.js"
+  // const createPost = renderCreatePostForm();
 
 export function renderHeader(currentUser) {
   const headerContainer = document.querySelector("header");
@@ -12,14 +14,13 @@ export function renderHeader(currentUser) {
   // Clear the previous children
   headerContainer.replaceChildren();
 
-  const topRow = createElement(
-    "div",
-    "",
-    "row-container",
-    "justify-content-space-between",
-  );
+  // const topRow = createElement(
+  //   "div",
+  //   "",
+  //   "row-container",
+  // );
 
-  const titleRow = createDivRow("justify-content-start");
+  const titleRow = createDivRow("justify-content-start", "margin-bottom");
   const appLogo = createImage("/favicon.svg", "Quill logo", "app-logo-image");
   const title = createElement("h1", "Bloggie Writer");
 
@@ -41,7 +42,7 @@ export function renderHeader(currentUser) {
   const newPostButton = createButton(
     "button",
     "New Post",
-    "open-new-post",
+    "open-new-post-form",
     "new-post-button",
     "full-width",
   );
@@ -56,11 +57,19 @@ export function renderHeader(currentUser) {
 
   const adminButton = createButton(
     "button",
-    "Admin",
+    "",
     "open-admin-page", // This data-action triggers case of the same name in events.js
     "admin-button",
-    "full-width",
+    // "full-width",
   );
+
+  const adminButtonImage = createImage(
+    "/assets/gear.svg",
+    "Gear icon to open admin page",
+    "admin-button-image",
+  );
+
+  adminButton.append(adminButtonImage);
 
   // Below selects the appropriate authentication controls based on whether currentUser is logged in
   // TODO - reconfigure this later for ADMIN vs WRITER
@@ -78,6 +87,7 @@ export function renderHeader(currentUser) {
     buttonContainer.append(newPostButton, logoutButton, profileButton);
   }
 
+  // NOTE - I changed the backend to prevent "USER" role from logging in, keep below as a guard
   if (currentUser && currentUser.role === "USER") {
     buttonContainer.append(logoutButton, profileButton);
   }
@@ -91,11 +101,11 @@ export function renderHeader(currentUser) {
   // const buttonAuthControls = authControls(state.currentUser);
 
   titleRow.append(appLogo, title);
-  topRow.append(
-    titleRow,
-    //  buttonContainer,
-    // buttonAuthControls,
-  );
+  // topRow.append(
+  //   titleRow,
+  //   //  buttonContainer,
+  //   // buttonAuthControls,
+  // );
 
   // Create the logged in status message.
   const bottomRow = createElement("div", "", "row-container", "logged-in");
@@ -107,11 +117,20 @@ export function renderHeader(currentUser) {
       : "Please log in to comment.",
   );
 
+  const createPost = renderCreatePostForm("create-post");
+
   bottomRow.append(loginMessage);
 
   errorMessage.append(errorMessageParagraph);
 
   if (currentUser) {
-    headerContainer.append(topRow, buttonContainer, bottomRow, errorMessage);
+    headerContainer.append(
+      // topRow,
+      titleRow,
+      buttonContainer,
+      bottomRow,
+      errorMessage,
+      createPost,
+    );
   }
 }

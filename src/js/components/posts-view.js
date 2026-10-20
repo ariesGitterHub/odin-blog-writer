@@ -58,7 +58,19 @@ function renderPost(post, currentUser) {
   );
 
   // TODO - this is a temp dummy button
-  const publishPostButton = createButton("button", "Publish", "dummy", "dummy");
+  const publishPostButton = createButton(
+    "button",
+    //  "Publish",
+     post.published === true ? "Unpublish" : "Publish",
+      "dummy",
+       "publish-post-button"
+      );
+
+    publishPostButton.dataset.commentId = post.id;
+
+   post.published !== true
+     ? (publishPostButton.style.backgroundColor = "var(--red)")
+     : (publishPostButton.style.backgroundColor = "var(--black)");
 
   const editPostButton = createButton(
     "button",
