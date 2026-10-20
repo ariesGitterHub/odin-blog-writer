@@ -234,6 +234,9 @@ export function registerEventListeners() {
           // Reset the forms so no data lingers on a subsequent viewing          
           // loginForm.reset();
 
+          console.log("Logout click");
+          
+
           // Clear the states for posts and currentUser
           state.currentUser = null;
           state.posts = null

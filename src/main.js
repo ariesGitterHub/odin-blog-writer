@@ -19,6 +19,7 @@ async function init() {
   
 
   if (!state.currentUser) {
+    renderHeader(state.currentUser);
     loginSplash();
     renderPosts(state.posts = [], state.currentUser = null);
   }
@@ -28,8 +29,8 @@ async function init() {
     const postData = await getBlogPosts();
     state.posts = postData.posts;
     renderPosts(state.posts, state.currentUser);   
-    
   } 
+
   renderModal();
   renderFooter();
 

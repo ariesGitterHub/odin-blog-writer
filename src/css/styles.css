@@ -194,7 +194,7 @@ button {
   cursor: pointer;
   font-family: var(--font-mono);
   font-size: var(--font-size-small);
-  letter-spacing: 2px;
+  letter-spacing: 1px;
   padding: var(--spacer-small) var(--space-medium);
   text-transform: uppercase;
 }

@@ -5,6 +5,10 @@ export function renderHeader(currentUser) {
   const headerContainer = document.querySelector("header");
   headerContainer.classList.add("sticky-header");
 
+  currentUser
+    ? (headerContainer.style.display = "flex")
+    : (headerContainer.style.display = "none");
+
   // Clear the previous children
   headerContainer.replaceChildren();
 

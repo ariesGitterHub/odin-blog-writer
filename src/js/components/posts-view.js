@@ -17,6 +17,10 @@ import { createDivRow } from "./reusables.js";
 export function renderPosts(posts, currentUser) {
   const postsContainer = document.querySelector("#posts");
 
+  currentUser
+    ? (postsContainer.style.display = "flex")
+    : (postsContainer.style.display = "none");
+
   // Clear the previous children
   postsContainer.replaceChildren();
 
