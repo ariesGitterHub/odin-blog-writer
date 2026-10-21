@@ -2,6 +2,8 @@ import { createButton, createElement } from "../templates.js";
 import { formatExactDate } from "../../utils/format-date.utils.js";
 import {
   // renderLoginForm,
+  // renderCreatePostForm,
+  renderDeletePostForm,
   renderCreateCommentForm,
   renderUpdateCommentForm,
   renderDeleteCommentForm,
@@ -27,6 +29,7 @@ export function renderPosts(posts, currentUser) {
   posts.forEach((post) => {
     // postsContainer.style.border = "var(--border-basic)";
     const postArticle = renderPost(post, currentUser);
+    postArticle.dataset.postId = post.id;
     postsContainer.append(postArticle);
   });
 }
@@ -78,11 +81,12 @@ function renderPost(post, currentUser) {
     "open-update-post-form", // This data-action triggers case of the same name in events.js
     "edit-post-button",
   );
+  editPostButton.dataset.postId = post.id;
 
   // TODO - this is a temp dummy button
-  const deletePostButton = createButton("button", "Delete", "dummy", "dummy");
+  // const deletePostButton = createButton("button", "Delete", "dummy", "dummy");
 
-  // const deletePostButton = renderDeletePostForm(post.id); // TODO - create this, then delete dummy button above
+  const deletePostButton = renderDeletePostForm(post.id); // TODO - create this, then delete dummy button above
 
   const hrLine = createElement("hr", "", "hr-line-post");
 

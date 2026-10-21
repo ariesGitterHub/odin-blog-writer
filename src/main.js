@@ -16,19 +16,18 @@ async function init() {
 
   console.log("Is this null?? ==> ", state.currentUser);
 
-  
-
   if (!state.currentUser) {
     renderHeader(state.currentUser);
     loginSplash();
     renderPosts(state.posts = [], state.currentUser = null);
-  }
-
-  if (state.currentUser) {
+    console.log("NO! ---> state.currentUser");
+  } else {
+    // if (state.currentUser) {
     renderHeader(state.currentUser);
     const postData = await getBlogPosts();
     state.posts = postData.posts;
     renderPosts(state.posts, state.currentUser);   
+    console.log("Yes...state.currentUser")
   } 
 
   renderModal();

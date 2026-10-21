@@ -103,9 +103,15 @@ body {
   max-width: 100%;
   display: flex;
   flex-direction: column;
+  /* Below fixed those few input fields that were pushing outside the parent container's boundaries due to padding */
   box-sizing: border-box;
   border-inline: 0.125rem solid var(--blue);
   margin: 0 auto;
+}
+
+  /* Also, below fixed those few input fields that were pushing outside the parent container's boundaries due to padding */
+*, *:before, *:after {
+  box-sizing: inherit;
 }
 
 h1,
@@ -195,8 +201,11 @@ footer {
 
 /* Buttons */
 button {
-  height: fit-content;
+  height: 1.5rem;
   width: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: var(--gray);
   border: var(--border-basic);
   border-color: var(--red);
@@ -436,9 +445,8 @@ label {
 }
 
 input {
-  height: 1.25rem;
-  /* Below works for me */
-  width: 96%;
+  height: 1.5rem;
+  width: 100%;
   background-color: var(--white);
   border: var(--border-basic);
   border-color: var(--gray);
@@ -448,6 +456,10 @@ input {
   margin-bottom: var(--spacer-big);
   padding-left: var(--space-medium);
 }
+
+/* input[type=password] {
+  width: 100%;
+} */
 
 textarea {
   height: 5rem;
@@ -466,6 +478,7 @@ textarea {
 
 .login-form {
   flex-grow: 1;
+  /* width: fit-content; */
   max-width: 500px;
   display: flex;
   align-items: start;
@@ -486,6 +499,14 @@ textarea {
   margin: 0;
 }
 
+/* .login-form input {
+ width: 100%;
+} */
+
+/* .login-form input[type=email] {
+ width: auto;
+} */
+
 /* .profile-form {
   align-items: start;
   justify-content: center;
@@ -500,6 +521,14 @@ textarea {
   font-size: var(--font-size-modal-title); */
   /* margin-top: -0.125rem; */
 }
+
+/* .profile-form input {
+  width: auto;
+} */
+
+/* .profile-form input[type=password] {
+  width: 100%;
+} */
 
 .login-form .app-logo-image,
 .profile-form .app-logo-image {

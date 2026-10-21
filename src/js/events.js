@@ -4,9 +4,7 @@ import {
    } from "./auth.js";
 import { updateProfile, deleteProfile } from "./user.js";
 
-import {
-  createNewBlogPost
-} from "./posts.js";
+import { createNewBlogPost, deleteBlogPost } from "./posts.js";
 
 import {
   createNewBlogComment,
@@ -41,6 +39,7 @@ export function registerEventListeners() {
   const createPostForm = document.querySelector(".create-post-form");
 
   // Post-view forms
+  const deletePostForm = document.querySelector(".delete-post-form");
   const createCommentForm = document.querySelector(".create-comment-form");
   const updateCommentForm = document.querySelector(".update-comment-form");
   const deleteCommentForm = document.querySelector(".delete-comment-form");
@@ -89,8 +88,15 @@ export function registerEventListeners() {
     const postId = "create-post";
     // Using a class for this rather than an id
     const createPostForm = document.querySelector(".create-post-form");
-    createPostForm.reset();
+    
+    // createPostForm.reset();
     createPostForm.style.display = "flex";
+
+    // TODO - after a log in, clicking to open a "new post," writing it, then submitting the new post DOES NOT submit it, there is some sort of lag..."
+    // TRYING THIS...
+    // refreshPosts()
+
+    // console.log("createPostForm", createPostForm);
 
     charCount(postId);
   }
@@ -99,6 +105,7 @@ export function registerEventListeners() {
     // Using a class for this rather than an id
     const createPostForm = document.querySelector(".create-post-form");
     createPostForm.style.display = "none";
+    createPostForm.reset();
   }
 
   function openCreateCommentForm(button) {
@@ -107,6 +114,8 @@ export function registerEventListeners() {
 
     button.style.display = "none";
     createCommentForm.style.display = "block";
+
+    // console.log("Log from openCreateCommentForm in events.js", state.currentUser);
 
     charCount(postId);
   }
@@ -198,7 +207,7 @@ export function registerEventListeners() {
         modalContainer.style.display = "none";
         errorMessageProfile.textContent = "";
         errorMessageConfirmProfileDelete.textContent = "";
-        errorMessageHeader.textContent = ""; // TODO - check this to make sure it works
+        // errorMessageHeader.textContent = ""; // TODO - check this to make sure it works
         break;
 
       case "clear-form":  // TODO - make sure these are all used
@@ -240,6 +249,10 @@ export function registerEventListeners() {
 
       case "open-new-post-form":
         openCreatePostForm(button);
+        // console.log(
+        //   "Log from open-new-post-form in events.js",
+        //   state.currentUser,
+        // );
         break;
         
       case "cancel-new-post-form":
@@ -275,6 +288,7 @@ export function registerEventListeners() {
           state.currentUser = null;
           state.posts = null
           
+          // loginForm.reset();
           location.reload() // TODO - remove later
           console.log("✋ Logged out, goodbye!");
         } catch (err) {
@@ -297,6 +311,9 @@ export function registerEventListeners() {
       form !== profileForm &&
       form !== confirmProfileDeleteForm &&
       form !== createPostForm &&
+      !form.matches(".create-post-form") &&
+      form !== deletePostForm &&
+      !form.matches(".delete-post-form") &&
       form !== createCommentForm &&
       !form.matches(".create-comment-form") &&
       form !== updateCommentForm &&
@@ -322,7 +339,9 @@ export function registerEventListeners() {
         renderHeader(state.currentUser);
         renderPosts(state.posts, state.currentUser);
 
-        loginForm.reset();
+        console.log("Create post form - after login?: ", createPostForm)
+
+        // loginForm.reset();
         errorMessageLogin.textContent = "";
         loginContainer.style.display = "none";
 
@@ -394,38 +413,67 @@ export function registerEventListeners() {
       }
     }
 
-    // Create Comment
+    // Create Post
+    // if (form.matches(".create-post-form")) {
+    // if (form === createPostForm) {
     if (form.matches(".create-post-form")) {
+      // openCreatePostForm
       const postId = "create-post";
-
       const postTitleInput = form.querySelector("#create-post-title");
+      const postTextArea = form.querySelector(`#textarea-${postId}`);
 
-      const postDraftTextArea = form.querySelector(
-        `#textarea-${postId}`,
-      );
+      console.log("Here 1...");
 
-      const postDraftTitle = postTitleInput.value;
-      console.log("postDraftTitle", postDraftTitle);
-      
+      const postTitle = postTitleInput.value;
+      console.log("postDraftTitle", postTitle);
 
-      const postDraftMessage = postDraftTextArea.value;
+      const postMessage = postTextArea.value;
+      console.log("postMessage", postMessage);
+
+      console.log("Here 2...");
 
       try {
+        console.log("createPostForm in form submit code", createPostForm);
+
         const postData = await createNewBlogPost(
           // userId, Not needed, backend handles this
           // postId,
-          postDraftTitle,
-          postDraftMessage,
+          postTitle,
+          postMessage,
+        );
+
+        // Refresh state.posts and posts
+        await refreshPosts();
+        // const createPostForm = document.querySelector(".create-post-form");
+        // Use form!!!
+        form.style.display = "none";
+        // createPostForm.reset()
+        form.reset()
+        
+        console.log("Post created", postData);
+      } catch (err) {
+        console.error("Post creation failed:", err);
+        errorMessageHeader.textContent = err.message;
+      }
+    }
+
+    // Delete Post
+    // NOTE - these are hard deletes by design with no warning message
+    if (form.matches(".delete-post-form")) {
+      const postId = form.dataset.postId;
+
+      try {
+        const deletePostData = await deleteBlogPost(
+          // userId, Not needed, backend handles this
+          postId,
         );
 
         // Refresh state.posts and posts
         await refreshPosts();
 
-        createPostForm.style.display = "none";
-        createPostForm.reset()
-        console.log("Post created", postData);
+        console.log("Post deleted", deletePostData);
       } catch (err) {
-        console.error("Post creation failed:", err);
+        console.error("Post deletion failed:", err);
         errorMessageHeader.textContent = err.message;
       }
     }
@@ -434,17 +482,15 @@ export function registerEventListeners() {
     if (form.matches(".create-comment-form")) {
       const postId = form.id;
 
-      const commentDraftTextArea = document.querySelector(
-        `#textarea-${postId}`,
-      );
+      const commentTextArea = document.querySelector(`#textarea-${postId}`);
 
-      const commentDraftMessage = commentDraftTextArea.value;
+      const commentMessage = commentTextArea.value;
 
       try {
         const commentData = await createNewBlogComment(
           // userId, Not needed, backend handles this
           postId,
-          commentDraftMessage,
+          commentMessage,
         );
 
         // Refresh state.posts and posts
@@ -509,5 +555,5 @@ export function registerEventListeners() {
         errorMessageHeader.textContent = err.message;
       }
     }
-  });
+  })
 }

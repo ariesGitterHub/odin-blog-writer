@@ -117,7 +117,8 @@ export function renderHeader(currentUser) {
       : "Please log in to comment.",
   );
 
-  const createPost = renderCreatePostForm("create-post");
+  const createPostForm = renderCreatePostForm("create-post");
+  // const createPostForm = renderCreatePostForm();
 
   bottomRow.append(loginMessage);
 
@@ -130,7 +131,7 @@ export function renderHeader(currentUser) {
       buttonContainer,
       bottomRow,
       errorMessage,
-      createPost,
+      createPostForm,
     );
   }
 }

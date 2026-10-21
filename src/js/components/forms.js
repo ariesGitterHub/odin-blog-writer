@@ -257,9 +257,9 @@ export function renderConfirmProfileDeleteForm() {
 }
 
 // Blog post forms
-export function renderCreatePostForm(postId) {
+export function renderCreatePostForm(postId = "create-form") {
     const createPostForm = createElement("form", "", "create-post-form");
-    // createCommentForm.id = postId;
+    createPostForm.id = postId;
 
     const postDiv = createElement("div", "", "create-post-div");
 
@@ -273,6 +273,8 @@ export function renderCreatePostForm(postId) {
       true,
     );
 
+    postTitleInput.maxLength = 255;
+
     const messageRow = createDivRow("gap", "justify-content-start");
 
     const maxCharLimitMessage = createElement(
@@ -285,13 +287,13 @@ export function renderCreatePostForm(postId) {
 
     const textArea = createElement("textarea", "");
     textArea.id = `textarea-${postId}`;
-    textArea.name = "comment_message";
+    textArea.name = "post_message";
     textArea.maxLength = 255;
 
     const buttonRow = createDivRow("justify-content-end");
 
     const submitButton = createSubmitButton();
-    // submitButton.dataset.postId = postId;
+    submitButton.dataset.postId = postId;
 
     const cancelButton = createButton(
       "button",
@@ -321,7 +323,31 @@ export function renderEditPostForm(postId, published, postTitle, postMessage) {}
 
 export function renderTogglePublishedForm(postId, published) {}
 
-export function renderDeletePostForm(postId) {}
+export function renderDeletePostForm(postId) {
+  const deletePostForm = createElement("form", "", "delete-post-form");
+  deletePostForm.dataset.postId = postId;
+
+  // NOTE - below, I can't use createButton function helper from template.js here, as this --> "" , is not working to prevent data-action from filling in the next item into its place
+
+  // const deleteCommentButton = createButton(
+  //   "button",
+  //   "Delete",
+  //   // "delete-comment",
+  //   "",
+  //   "delete-comment-button",
+  // );
+
+  // Cont'd, instead I am just creating this button the regular way
+  const deletePostButton = document.createElement("button");
+  deletePostButton.textContent = "Delete";
+  deletePostButton.classList.add("delete-post-button");
+  deletePostButton.dataset.postId = postId;
+
+  deletePostForm.append(deletePostButton);
+
+  return deletePostForm;
+}
+
 
 // Blog comment forms (on posts)
 export function renderCreateCommentForm(postId) {
