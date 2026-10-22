@@ -312,13 +312,13 @@ export function registerEventListeners() {
       form !== confirmProfileDeleteForm &&
       form !== createPostForm &&
       !form.matches(".create-post-form") &&
-      form !== deletePostForm &&
+      // form !== deletePostForm &&
       !form.matches(".delete-post-form") &&
-      form !== createCommentForm &&
+      // form !== createCommentForm &&
       !form.matches(".create-comment-form") &&
-      form !== updateCommentForm &&
+      // form !== updateCommentForm &&
       !form.matches(".update-comment-form") &&
-      form !== deleteCommentForm &&
+      // form !== deleteCommentForm &&
       !form.matches(".delete-comment-form")
     )
       return;

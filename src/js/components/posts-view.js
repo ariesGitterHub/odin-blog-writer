@@ -55,6 +55,20 @@ function renderPost(post, currentUser) {
 
   const postTimestamp = renderTimestamp(post.createdAt, post.updatedAt);
 
+  // TODO - Place below here with these selected to reestablish correct order
+    postArticle.append(
+      postTitle,
+      // postAuthor,
+      // postTimestamp,
+      postDetailsRow,
+      // editButtonRow,
+      // hrLine,
+      // postMessage,
+    );
+
+  // Ownership information can be used here to conditionally render the edit button once the currentUser comparison is defined.
+  if (currentUser !== null && currentUser.id === post.user.id) {
+
   const editButtonRow = createDivRow(
     "justify-content-start",
     "margin-post-button-rows",
@@ -88,20 +102,24 @@ function renderPost(post, currentUser) {
 
   const deletePostButton = renderDeletePostForm(post.id); // TODO - create this, then delete dummy button above
 
+  editButtonRow.append(publishPostButton, editPostButton, deletePostButton);
+  postArticle.append(editButtonRow);
+
+}
   const hrLine = createElement("hr", "", "hr-line-post");
 
   const postMessage = createElement("p", post.postMessage, "post-message");
 
   postDetailsRow.append(postAuthor, postTimestamp);
 
-  editButtonRow.append(publishPostButton, editPostButton, deletePostButton);
+  // editButtonRow.append(publishPostButton, editPostButton, deletePostButton);
 
   postArticle.append(
-    postTitle,
+    // postTitle,
     // postAuthor,
     // postTimestamp,
-    postDetailsRow,
-    editButtonRow,
+    // postDetailsRow,
+    // editButtonRow,
     hrLine,
     postMessage,
   );
@@ -169,7 +187,7 @@ function renderComment(comment, currentUser) {
     commentMessage,
   );
 
-  // Ownership information can be used here to conditionally render the edit button once the current-user comparison is defined.
+  // Ownership information can be used here to conditionally render the edit button once the currentUser comparison is defined.
   if (currentUser !== null && currentUser.id === comment.user.id) {
     const editButtonRow = createDivRow(
       "justify-content-end",
