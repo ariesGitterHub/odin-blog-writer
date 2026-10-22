@@ -3,6 +3,7 @@ import { formatExactDate } from "../../utils/format-date.utils.js";
 import {
   // renderLoginForm,
   // renderCreatePostForm,
+  renderUpdatePostForm,
   renderDeletePostForm,
   renderCreateCommentForm,
   renderUpdateCommentForm,
@@ -29,13 +30,20 @@ export function renderPosts(posts, currentUser) {
   posts.forEach((post) => {
     // postsContainer.style.border = "var(--border-basic)";
     const postArticle = renderPost(post, currentUser);
+    const updatePostArticle = renderUpdatePostForm(post.id, post.postTitle, post.postMessage)
+    // TODO - do i need both below?
     postArticle.dataset.postId = post.id;
-    postsContainer.append(postArticle);
+    postArticle.id = post.id;
+    postsContainer.append(postArticle, updatePostArticle);
   });
 }
 
 function renderPost(post, currentUser) {
+  // This is shown normally
   const postArticle = createElement("article", "", "post-article");
+
+  // ...Unless the edit button is clicked
+  // const updateCommentForm = document.getElementById(`update-post-form-${post.id}`);
 
   const postTitle = createElement("h2", post.postTitle);
 
@@ -66,7 +74,7 @@ function renderPost(post, currentUser) {
       // postMessage,
     );
 
-  // Ownership information can be used here to conditionally render the edit button once the currentUser comparison is defined.
+  // Ownership information can be used here to conditionally render the following buttons.
   if (currentUser !== null && currentUser.id === post.user.id) {
 
   const editButtonRow = createDivRow(
@@ -187,7 +195,7 @@ function renderComment(comment, currentUser) {
     commentMessage,
   );
 
-  // Ownership information can be used here to conditionally render the edit button once the currentUser comparison is defined.
+  // Ownership information can be used here to conditionally render the following buttons.
   if (currentUser !== null && currentUser.id === comment.user.id) {
     const editButtonRow = createDivRow(
       "justify-content-end",

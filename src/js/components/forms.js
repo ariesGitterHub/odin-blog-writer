@@ -257,7 +257,7 @@ export function renderConfirmProfileDeleteForm() {
 }
 
 // Blog post forms
-export function renderCreatePostForm(postId = "create-form") {
+export function renderCreatePostForm(postId) {
     const createPostForm = createElement("form", "", "create-post-form");
     createPostForm.id = postId;
 
@@ -319,7 +319,74 @@ export function renderCreatePostForm(postId = "create-form") {
     return createPostForm;
 }
 
-export function renderEditPostForm(postId, published, postTitle, postMessage) {}
+// export function renderUpdatePostForm(postId, published, postTitle, postMessage) {
+export function renderUpdatePostForm(postId, postTitle, postMessage) {
+  const updatePostForm = createElement("form", "", "update-post-form");
+  updatePostForm.id = `update-post-form-${postId}`;
+  updatePostForm.dataset.postId = postId;
+
+  const updatePostDiv = createElement("div", "", "update-post-div");
+
+  const updatePostTitle = createElement("h2", "Edit Post");
+
+  const updatePostTitleLabel = createLabel(`update-post-title-${postId}`, "Post Title");
+
+  const updatePostTitleInput = createInput(
+    `update-post-title-${postId}`,
+    "text",
+    "post_title",
+    "",
+    // true,
+  );
+  updatePostTitleInput.value = postTitle;
+  updatePostTitleInput.maxLength = 255;
+
+  const messageRow = createDivRow("gap", "justify-content-start");
+
+  const maxCharLimitMessage = createElement(
+    "p",
+    "255 Character Limit",
+    "max-char-limit",
+  );
+  maxCharLimitMessage.id = `max-char-limit-${postId}`;
+  // maxCharLimitMessage.id = `max-char-limit-create-post`;
+
+  const textArea = createElement("textarea", "");
+  textArea.id = `textarea-${postId}`;
+  textArea.name = "post_message";
+  textArea.value = postMessage
+  textArea.maxLength = 255;
+
+  const buttonRow = createDivRow("justify-content-end");
+
+  const submitButton = createSubmitButton();
+  submitButton.dataset.postId = postId;
+
+  const cancelButton = createButton(
+    "button",
+    "Cancel",
+    "cancel-update-post-form", // This data-action triggers case of the same name in events.js
+    // TODO - add above to events.js
+  );
+  cancelButton.dataset.postId = postId;
+
+  messageRow.append(maxCharLimitMessage);
+
+  buttonRow.append(submitButton, cancelButton);
+
+  updatePostDiv.append(
+    updatePostTitle,
+    updatePostTitleLabel,
+    updatePostTitleInput,
+    messageRow,
+    textArea,
+    buttonRow,
+  );
+
+  updatePostForm.append(updatePostDiv);
+
+  return updatePostForm;
+}
 
 export function renderTogglePublishedForm(postId, published) {}
 
@@ -352,7 +419,9 @@ export function renderDeletePostForm(postId) {
 // Blog comment forms (on posts)
 export function renderCreateCommentForm(postId) {
   const createCommentForm = createElement("form", "", "create-comment-form");
-  createCommentForm.id = postId;
+  // createCommentForm.id = postId;
+  createCommentForm.id = `create-comment-form-${postId}`;
+  createCommentForm.dataset.postId = postId;
 
   const createCommentDiv = createElement("div", "", "create-comment-div");
 
@@ -424,7 +493,6 @@ export function renderUpdateCommentForm(commentId, commentMessage) {
     "Cancel",
     "cancel-update-comment-form", // This data-action triggers case of the same name in events.js
   );
-
   cancelButton.dataset.commentId = commentId;
 
   messageRow.append(maxCharLimitMessage);

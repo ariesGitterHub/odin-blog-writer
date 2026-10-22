@@ -554,6 +554,7 @@ textarea {
 }
 
 .create-post-form,
+.update-post-form,
 .create-comment-form,
 .update-comment-form {
   display: none;
@@ -566,6 +567,7 @@ textarea {
 }
 
 .create-post-div,
+.update-post-div,
 .create-comment-div,
 .update-comment-div {
   display: flex;

@@ -117,6 +117,7 @@ export function renderHeader(currentUser) {
       : "Please log in to comment.",
   );
 
+  // Below is the for that creates new posts
   const createPostForm = renderCreatePostForm("create-post");
   // const createPostForm = renderCreatePostForm();
 

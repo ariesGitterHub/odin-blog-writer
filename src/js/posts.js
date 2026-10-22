@@ -16,9 +16,9 @@ export function createNewBlogPost(postTitle, postMessage) {
   });
 }
 
-export function editBlogPost(postId, published, postTitle, postMessage) {
+// export function editBlogPost(postId, published, postTitle, postMessage) {
+export function editBlogPost(postId, postTitle, postMessage) {
   return put(`/api/posts/${postId}`, {
-    published: published,
     post_title: postTitle,
     post_message: postMessage,
   });

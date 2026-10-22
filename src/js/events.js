@@ -4,7 +4,7 @@ import {
    } from "./auth.js";
 import { updateProfile, deleteProfile } from "./user.js";
 
-import { createNewBlogPost, deleteBlogPost } from "./posts.js";
+import { createNewBlogPost, editBlogPost, deleteBlogPost } from "./posts.js";
 
 import {
   createNewBlogComment,
@@ -39,6 +39,7 @@ export function registerEventListeners() {
   const createPostForm = document.querySelector(".create-post-form");
 
   // Post-view forms
+  const updatePostForm = document.querySelector(".update-post-form");
   const deletePostForm = document.querySelector(".delete-post-form");
   const createCommentForm = document.querySelector(".create-comment-form");
   const updateCommentForm = document.querySelector(".update-comment-form");
@@ -96,8 +97,6 @@ export function registerEventListeners() {
     // TRYING THIS...
     // refreshPosts()
 
-    // console.log("createPostForm", createPostForm);
-
     charCount(postId);
   }
 
@@ -108,9 +107,38 @@ export function registerEventListeners() {
     createPostForm.reset();
   }
 
+  function openUpdatePostForm(button) {
+    const postId = button.dataset.postId;
+    console.log(postId);
+    
+    const updatePostForm = document.getElementById(`update-post-form-${postId}`);
+    console.log("updatePostForm: ", updatePostForm);
+    
+    const existingPost = document.getElementById(postId);
+    
+    updatePostForm.style.display = "block"; 
+    existingPost.style.display = "none"
+
+    charCount(postId);
+  }
+
+  function closeUpdatePostForm(button) {
+    const postId = button.dataset.postId;
+    const updatePostForm = document.getElementById(`update-post-form-${postId}`);
+    
+    /// HERE!!!
+
+    const existingPost = document.getElementById(postId);
+
+    updatePostForm.style.display = "none"; 
+    existingPost.style.display = "block"
+    // updatePostForm.reset();
+  }
+
   function openCreateCommentForm(button) {
     const postId = button.dataset.postId;
-    const createCommentForm = document.getElementById(postId);
+    // const createCommentForm = document.getElementById(postId);
+    const createCommentForm = document.getElementById(`create-comment-form-${postId}`);
 
     button.style.display = "none";
     createCommentForm.style.display = "block";
@@ -122,7 +150,8 @@ export function registerEventListeners() {
 
   function closeCreateCommentForm(button) {
     const postId = button.dataset.postId;
-    const createCommentForm = document.getElementById(postId);
+    // const createCommentForm = document.getElementById(postId);
+    const createCommentForm = document.getElementById(`create-comment-form-${postId}`);
 
     const articleContainer = button.closest(".post-article");
     const commentButton = articleContainer.querySelector(".comment-button");
@@ -167,7 +196,8 @@ export function registerEventListeners() {
 
     charCountTargetElement.addEventListener("input", () => {
       const charCount = charCountTargetElement.value.length;
-
+      console.log("charCount === ", charCount);
+      
       maxCharLimitMessage.textContent = `${charCount}/255 Characters`;
     });
   }
@@ -249,15 +279,19 @@ export function registerEventListeners() {
 
       case "open-new-post-form":
         openCreatePostForm(button);
-        // console.log(
-        //   "Log from open-new-post-form in events.js",
-        //   state.currentUser,
-        // );
         break;
         
       case "cancel-new-post-form":
         cancelCreatePostForm(button);
         break;
+
+      case "open-update-post-form":
+        openUpdatePostForm(button);
+      break;
+
+      case "cancel-update-post-form":
+        closeUpdatePostForm(button);
+      break;
 
       case "open-create-comment-form":
         openCreateCommentForm(button);
@@ -312,13 +346,15 @@ export function registerEventListeners() {
       form !== confirmProfileDeleteForm &&
       form !== createPostForm &&
       !form.matches(".create-post-form") &&
-      // form !== deletePostForm &&
+      form !== updatePostForm &&
+      !form.matches(".update-post-form") &&
+      form !== deletePostForm &&
       !form.matches(".delete-post-form") &&
-      // form !== createCommentForm &&
+      form !== createCommentForm &&
       !form.matches(".create-comment-form") &&
-      // form !== updateCommentForm &&
+      form !== updateCommentForm &&
       !form.matches(".update-comment-form") &&
-      // form !== deleteCommentForm &&
+      form !== deleteCommentForm &&
       !form.matches(".delete-comment-form")
     )
       return;
@@ -339,7 +375,7 @@ export function registerEventListeners() {
         renderHeader(state.currentUser);
         renderPosts(state.posts, state.currentUser);
 
-        console.log("Create post form - after login?: ", createPostForm)
+        console.log("Create post form - after login?: ", createPostForm);
 
         // loginForm.reset();
         errorMessageLogin.textContent = "";
@@ -376,7 +412,7 @@ export function registerEventListeners() {
         errorMessageProfile.textContent = "";
 
         // Reset all forms
-        loginForm.reset();
+        // loginForm.reset();
         profileForm.reset();
 
         console.log("😀 Profile update successful:", state.currentUser);
@@ -417,42 +453,76 @@ export function registerEventListeners() {
     // if (form.matches(".create-post-form")) {
     // if (form === createPostForm) {
     if (form.matches(".create-post-form")) {
-      // openCreatePostForm
       const postId = "create-post";
-      const postTitleInput = form.querySelector("#create-post-title");
-      const postTextArea = form.querySelector(`#textarea-${postId}`);
 
-      console.log("Here 1...");
+      const createPostTitleInput = form.querySelector("#create-post-title");
+      const createPostTextArea = form.querySelector(`#textarea-${postId}`);
 
-      const postTitle = postTitleInput.value;
-      console.log("postDraftTitle", postTitle);
-
-      const postMessage = postTextArea.value;
-      console.log("postMessage", postMessage);
-
-      console.log("Here 2...");
+      const createPostTitle = createPostTitleInput.value;
+      const createPostMessage = createPostTextArea.value;
 
       try {
-        console.log("createPostForm in form submit code", createPostForm);
-
         const postData = await createNewBlogPost(
           // userId, Not needed, backend handles this
           // postId,
-          postTitle,
-          postMessage,
+          createPostTitle,
+          createPostMessage,
         );
 
         // Refresh state.posts and posts
         await refreshPosts();
-        // const createPostForm = document.querySelector(".create-post-form");
-        // Use form!!!
+
         form.style.display = "none";
         // createPostForm.reset()
-        form.reset()
-        
+        form.reset();
+
         console.log("Post created", postData);
       } catch (err) {
         console.error("Post creation failed:", err);
+        errorMessageHeader.textContent = err.message;
+      }
+    }
+
+    // Update Post 
+    if (form.matches(".update-post-form")) {
+      const postId = form.dataset.postId;
+      console.log("This form's postId should be === ", postId);
+
+      // const updatePostTitleInput = document.getElementById(
+      //   `update-post-title-${postId}`,
+      // );
+      const updatePostTitleInput = form.querySelector(`#update-post-title-${postId}`);
+      const updatePostTitle = updatePostTitleInput.value;
+      console.log("updatePostTitle........", updatePostTitle);
+
+      // const updatePostTextArea = document.getElementById(
+      //   `textarea-${postId}`,
+      // );
+      const updatePostTextArea = form.querySelector(`#textarea-${postId}`);
+
+      const updatePostMessage = updatePostTextArea.value;
+      console.log("updatePostMessage........", updatePostMessage);
+
+      // let updatePostMessageCount = updatePostMessage.length; // TODO - what is this for???
+
+      try {
+        const updatePostData = await editBlogPost(
+          // userId, Not needed, backend handles this
+          postId,
+          // updatePostTitleInput,
+          updatePostTitle,
+          updatePostMessage,
+        );
+
+        // Refresh header
+        renderHeader(state.currentUser);
+
+        // Refresh state.posts and posts
+        await refreshPosts();
+
+        console.log("Post update", updatePostData);
+      } catch (err) {
+        console.error("Post update failed:", err);
         errorMessageHeader.textContent = err.message;
       }
     }
@@ -480,23 +550,25 @@ export function registerEventListeners() {
 
     // Create Comment
     if (form.matches(".create-comment-form")) {
-      const postId = form.id;
+      // const postId = form.id;
+      const postId = form.dataset.postId;
 
-      const commentTextArea = document.querySelector(`#textarea-${postId}`);
+      // const createCommentTextArea = document.querySelector(`#textarea-${postId}`);
+      const createCommentTextArea = form.querySelector(`#textarea-${postId}`);
 
-      const commentMessage = commentTextArea.value;
+      const createCommentMessage = createCommentTextArea.value;
 
       try {
-        const commentData = await createNewBlogComment(
+        const createCommentData = await createNewBlogComment(
           // userId, Not needed, backend handles this
           postId,
-          commentMessage,
+          createCommentMessage,
         );
 
         // Refresh state.posts and posts
         await refreshPosts();
 
-        console.log("Comment created", commentData);
+        console.log("Comment created", createCommentData);
       } catch (err) {
         console.error("Comment creation failed:", err);
         errorMessageHeader.textContent = err.message;
@@ -508,18 +580,19 @@ export function registerEventListeners() {
       const commentId = form.dataset.commentId;
       console.log("form.dataset.commentId === ", commentId);
 
-      const commentUpdateTextArea = document.getElementById(
-        `textarea-${commentId}`,
-      );
+      // const updateCommentTextArea = document.getElementById(
+      //   `textarea-${commentId}`,
+      // );
+      const updateCommentTextArea = form.querySelector(`#textarea-${commentId}`);
 
-      const commentUpdateMessage = commentUpdateTextArea.value;
-      let commentUpdateMessageCount = commentUpdateMessage.length;
+      const updateCommentMessage = updateCommentTextArea.value;
+      // let updateCommentMessageCount = updateCommentMessage.length;
 
       try {
-        const commentUpdateData = await editBlogComment(
+        const updateCommentData = await editBlogComment(
           // userId, Not needed, backend handles this
           commentId,
-          commentUpdateMessage,
+          updateCommentMessage,
         );
 
         // Refresh header
@@ -528,7 +601,7 @@ export function registerEventListeners() {
         // Refresh state.posts and posts
         await refreshPosts();
 
-        console.log("Comment update", commentUpdateData);
+        console.log("Comment update", updateCommentData);
       } catch (err) {
         console.error("Comment update failed:", err);
         errorMessageHeader.textContent = err.message;
