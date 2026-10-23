@@ -4,6 +4,7 @@ import {
   // renderLoginForm,
   // renderCreatePostForm,
   renderUpdatePostForm,
+  renderTogglePublishedForm,
   renderDeletePostForm,
   renderCreateCommentForm,
   renderUpdateCommentForm,
@@ -82,20 +83,22 @@ function renderPost(post, currentUser) {
     "margin-post-button-rows",
   );
 
+  const publishPostButton = renderTogglePublishedForm(post.id, post.published);
+
   // TODO - this is a temp dummy button
-  const publishPostButton = createButton(
-    "button",
-    //  "Publish",
-     post.published === true ? "Unpublish" : "Publish",
-      "dummy",
-       "publish-post-button"
-      );
+  // const publishPostButton = createButton(
+  //   "button",
+  //   //  "Publish",
+  //    post.published === true ? "Unpublish" : "Publish",
+  //     "toggle-publish-unpublish",
+  //      "publish-post-button"
+  //     );
 
-    publishPostButton.dataset.commentId = post.id;
+  //   publishPostButton.dataset.commentId = post.id;
 
-   post.published !== true
-     ? (publishPostButton.style.backgroundColor = "var(--red)")
-     : (publishPostButton.style.backgroundColor = "var(--black)");
+  //  post.published === true
+  //    ? (publishPostButton.style.backgroundColor = "var(--black)")
+  //    : (publishPostButton.style.backgroundColor = "var(--red)");
 
   const editPostButton = createButton(
     "button",

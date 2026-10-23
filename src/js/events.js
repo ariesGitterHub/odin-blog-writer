@@ -4,7 +4,12 @@ import {
    } from "./auth.js";
 import { updateProfile, deleteProfile } from "./user.js";
 
-import { createNewBlogPost, editBlogPost, deleteBlogPost } from "./posts.js";
+import {
+  createNewBlogPost,
+  editBlogPost,
+  togglePublishedBlogPost,
+  deleteBlogPost,
+} from "./posts.js";
 
 import {
   createNewBlogComment,
@@ -40,6 +45,7 @@ export function registerEventListeners() {
 
   // Post-view forms
   const updatePostForm = document.querySelector(".update-post-form");
+  const togglePublishedPostForm = document.querySelector(".toggle-published-post-form");
   const deletePostForm = document.querySelector(".delete-post-form");
   const createCommentForm = document.querySelector(".create-comment-form");
   const updateCommentForm = document.querySelector(".update-comment-form");
@@ -309,6 +315,10 @@ export function registerEventListeners() {
         closeUpdateCommentForm(button);
         break;
 
+      // case "toggle-publish-unpublish":
+
+      //   break;
+
       case "logout":
         try {
           await logout();
@@ -348,6 +358,8 @@ export function registerEventListeners() {
       !form.matches(".create-post-form") &&
       form !== updatePostForm &&
       !form.matches(".update-post-form") &&
+      form !== togglePublishedPostForm &&
+      !form.matches(".toggle-published-post-form") &&
       form !== deletePostForm &&
       !form.matches(".delete-post-form") &&
       form !== createCommentForm &&
@@ -493,7 +505,7 @@ export function registerEventListeners() {
       // );
       const updatePostTitleInput = form.querySelector(`#update-post-title-${postId}`);
       const updatePostTitle = updatePostTitleInput.value;
-      console.log("updatePostTitle........", updatePostTitle);
+    
 
       // const updatePostTextArea = document.getElementById(
       //   `textarea-${postId}`,
@@ -501,7 +513,7 @@ export function registerEventListeners() {
       const updatePostTextArea = form.querySelector(`#textarea-${postId}`);
 
       const updatePostMessage = updatePostTextArea.value;
-      console.log("updatePostMessage........", updatePostMessage);
+      // console.log("updatePostMessage........", updatePostMessage);
 
       // let updatePostMessageCount = updatePostMessage.length; // TODO - what is this for???
 
@@ -527,9 +539,61 @@ export function registerEventListeners() {
       }
     }
 
-    // Delete Post
-    // NOTE - these are hard deletes by design with no warning message
+    // Toggle Post Publish Status
+    if (form.matches(".toggle-published-post-form")) {
+      const postId = form.dataset.postId;
+      console.log("This form's postId should be === ", postId);
+;
+      const publishPostButton = form.querySelector(
+        `#publish-post-button-${postId}`,
+      );
+      let publishPostButtonDataset = publishPostButton.dataset.published;
+      console.log("publishPostButtonDataset", publishPostButtonDataset);
+
+      const publishedInput = form.querySelector(`#published-${postId}`);
+      let togglePublishValue = publishedInput.checked;
+      console.log("publishedInput value", publishedInput.checked);
+
+      try {
+        // let togglePublishValue;
+
+        if (publishPostButtonDataset === "true") {
+          publishPostButtonDataset = "false";
+          publishPostButton.textContent = "Publish";
+          publishPostButton.style.backgroundColor = "var(--red)";
+          // togglePublishValue = "false";
+          togglePublishValue = publishedInput.checked = false;
+        } else if (publishPostButtonDataset === "false") {
+          publishPostButton.dataset.published = "true";
+          publishPostButton.textContent = "Unpublish";
+          publishPostButton.style.backgroundColor = "var(--black)";
+          // togglePublishValue = "true";
+          togglePublishValue = publishedInput.checked = true;
+        }
+
+        const updatePostData = await togglePublishedBlogPost(
+          // userId, Not needed, backend handles this
+          postId,
+          // published,
+          togglePublishValue,
+        );
+
+        // Refresh header
+        renderHeader(state.currentUser);
+
+        // Refresh state.posts and posts
+        await refreshPosts();
+
+        console.log("Published post update", updatePostData);
+      } catch (err) {
+        console.error("Published post update failed:", err);
+        errorMessageHeader.textContent = err.message;
+      }
+    }
+
     if (form.matches(".delete-post-form")) {
+      // Delete Post
+      // NOTE - these are hard deletes by design with no warning message
       const postId = form.dataset.postId;
 
       try {

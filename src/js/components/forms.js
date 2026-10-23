@@ -388,33 +388,71 @@ export function renderUpdatePostForm(postId, postTitle, postMessage) {
   return updatePostForm;
 }
 
-export function renderTogglePublishedForm(postId, published) {}
+export function renderTogglePublishedForm(postId, published) {
+  const togglePublishedPostForm = createElement("form", "", "toggle-published-post-form");
+  togglePublishedPostForm.dataset.postId = postId;
+
+  // const publishedInput = createInput(`published-${postId}`, "checkbox", "published", "");
+  // publishedInput.style.display = "none";
+
+    const publishPostButton = createButton(
+      "submit",
+      [published === true ? "Unpublish" : "Publish"],
+      "",
+      "publish-post-button",
+    );
+
+    // publishPostButton must read initial/current state
+    published === true
+      ? (publishPostButton.dataset.published = "true")
+      : publishPostButton.dataset.published = "false";
+
+    published === true
+      ? (publishPostButton.style.backgroundColor = "var(--black)")
+      : (publishPostButton.style.backgroundColor = "var(--red)");
+
+  // publishPostButton.dataset.postId = postId;
+  publishPostButton.id = `publish-post-button-${postId}`;
+
+    const publishedInput = createInput(
+      `published-${postId}`,
+      // "text",
+      "checkbox",
+      "published",
+      "",
+    );
+    // publishedInput.style.display = "none";
+    publishedInput.checked = published;
+
+  togglePublishedPostForm.append(publishPostButton, publishedInput);
+
+  return togglePublishedPostForm;
+}
 
 export function renderDeletePostForm(postId) {
   const deletePostForm = createElement("form", "", "delete-post-form");
   deletePostForm.dataset.postId = postId;
 
   // NOTE - below, I can't use createButton function helper from template.js here, as this --> "" , is not working to prevent data-action from filling in the next item into its place
-
-  // const deleteCommentButton = createButton(
-  //   "button",
-  //   "Delete",
-  //   // "delete-comment",
-  //   "",
-  //   "delete-comment-button",
-  // );
+  // TODO - DELETE ABOVE, I forgot to use type = submit
+  const deletePostButton = createButton(
+    "submit",
+    "Delete",
+    "",
+    "delete-post-button",
+  );
 
   // Cont'd, instead I am just creating this button the regular way
-  const deletePostButton = document.createElement("button");
-  deletePostButton.textContent = "Delete";
-  deletePostButton.classList.add("delete-post-button");
+  // const deletePostButton = document.createElement("button");
+  // deletePostButton.type = "submit";
+  // deletePostButton.textContent = "Delete";
+  // deletePostButton.classList.add("delete-post-button");
   deletePostButton.dataset.postId = postId;
 
   deletePostForm.append(deletePostButton);
 
   return deletePostForm;
 }
-
 
 // Blog comment forms (on posts)
 export function renderCreateCommentForm(postId) {
@@ -510,19 +548,18 @@ export function renderDeleteCommentForm(commentId) {
   deleteCommentForm.dataset.commentId = commentId;
 
   // NOTE - below, I can't use createButton function helper from template.js here, as this --> "" , is not working to prevent data-action from filling in the next item into its place
-
-  // const deleteCommentButton = createButton(
-  //   "button",
-  //   "Delete",
-  //   // "delete-comment",
-  //   "",
-  //   "delete-comment-button",
-  // );
+  // TODO - DELETE ABOVE, I forgot to use type = submit
+  const deleteCommentButton = createButton(
+    "submit",
+    "Delete",
+    "",
+    "delete-comment-button",
+  );
 
   // Cont'd, instead I am just creating this button the regular way
-  const deleteCommentButton = document.createElement("button");
-  deleteCommentButton.textContent = "Delete";
-  deleteCommentButton.classList.add("delete-comment-button");
+  // const deleteCommentButton = document.createElement("button");
+  // deleteCommentButton.textContent = "Delete";
+  // deleteCommentButton.classList.add("delete-comment-button");
   deleteCommentButton.dataset.commentId = commentId;
 
   deleteCommentForm.append(deleteCommentButton);

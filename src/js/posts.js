@@ -24,9 +24,10 @@ export function editBlogPost(postId, postTitle, postMessage) {
   });
 }
 
-export function togglePublishBlogPost(postId, published) {
-  return put(`/api/posts/${postId}`, {
-    published: published,
+export function togglePublishedBlogPost(postId, published) {
+  return put(`/api/posts/publish/${postId}`, {
+    // published: published,
+    published,
   });
 }
 
