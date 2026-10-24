@@ -152,7 +152,8 @@ function renderPost(post, currentUser) {
     commentButton.dataset.postId = post.id;
 
     // Comment Draft DOM elements should go after comment button, and be singular
-    const createComment = renderCreateCommentForm(post.id);
+    // The use of "create-comment" was used to avoid collisions with another form, see renderCreateCommentForm() in forms.js for more
+    const createComment = renderCreateCommentForm(post.id, "create-comment");
 
     commentButtonRow.append(commentButton);
     postArticle.append(commentButtonRow, createComment);

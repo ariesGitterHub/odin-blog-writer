@@ -421,7 +421,7 @@ export function renderTogglePublishedForm(postId, published) {
       "published",
       "",
     );
-    // publishedInput.style.display = "none";
+    publishedInput.style.display = "none";
     publishedInput.checked = published;
 
   togglePublishedPostForm.append(publishPostButton, publishedInput);
@@ -455,7 +455,8 @@ export function renderDeletePostForm(postId) {
 }
 
 // Blog comment forms (on posts)
-export function renderCreateCommentForm(postId) {
+// NOTE - This is where I was having a collision with "maxCharLimitMessage.id = `max-char-limit-${postId}`;" and "textArea.id = `textarea-${postId}`;" Both createCommentForm and updatePostForm were using this; I added createComment
+export function renderCreateCommentForm(postId, createComment) {
   const createCommentForm = createElement("form", "", "create-comment-form");
   // createCommentForm.id = postId;
   createCommentForm.id = `create-comment-form-${postId}`;
@@ -470,10 +471,12 @@ export function renderCreateCommentForm(postId) {
     "255 Character Limit",
     "max-char-limit",
   );
-  maxCharLimitMessage.id = `max-char-limit-${postId}`;
+  // maxCharLimitMessage.id = `max-char-limit-${postId}`;
+  maxCharLimitMessage.id = `max-char-limit-${createComment}-${postId}`;
 
   const textArea = createElement("textarea", "");
-  textArea.id = `textarea-${postId}`;
+  // textArea.id = `textarea-${postId}`;
+  textArea.id = `textarea-${createComment}-${postId}`;
   textArea.name = "comment_message";
   textArea.maxLength = 255;
 

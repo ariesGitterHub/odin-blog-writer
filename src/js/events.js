@@ -117,24 +117,22 @@ export function registerEventListeners() {
     const postId = button.dataset.postId;
     console.log(postId);
     
-    const updatePostForm = document.getElementById(`update-post-form-${postId}`);
+    const updatePostForm = document.querySelector(`#update-post-form-${postId}`);
     console.log("updatePostForm: ", updatePostForm);
     
     const existingPost = document.getElementById(postId);
     
     updatePostForm.style.display = "block"; 
     existingPost.style.display = "none"
-
+  
     charCount(postId);
   }
 
   function closeUpdatePostForm(button) {
     const postId = button.dataset.postId;
-    const updatePostForm = document.getElementById(`update-post-form-${postId}`);
-    
-    /// HERE!!!
-
-    const existingPost = document.getElementById(postId);
+    const updatePostForm = document.querySelector(`#update-post-form-${postId}`);
+  
+    const existingPost = document.querySelector(`#${postId}`);
 
     updatePostForm.style.display = "none"; 
     existingPost.style.display = "block"
@@ -143,6 +141,8 @@ export function registerEventListeners() {
 
   function openCreateCommentForm(button) {
     const postId = button.dataset.postId;
+    const createComment = "create-comment";
+
     // const createCommentForm = document.getElementById(postId);
     const createCommentForm = document.getElementById(`create-comment-form-${postId}`);
 
@@ -151,7 +151,8 @@ export function registerEventListeners() {
 
     // console.log("Log from openCreateCommentForm in events.js", state.currentUser);
 
-    charCount(postId);
+    // charCount(postId);
+    charCount(postId, createComment);
   }
 
   function closeCreateCommentForm(button) {
@@ -192,21 +193,63 @@ export function registerEventListeners() {
     updateCommentForm.style.display = "none";
   }
 
-  function charCount(postOrCommentId) {
-    const charCountTargetElement = document.getElementById(
-      `textarea-${postOrCommentId}`,
+  // function charCount(postOrCommentId) {
+  //   // const charCountTargetElement = document.getElementById(
+  //   //   `textarea-${postOrCommentId}`,
+  //   // );
+  //   const charCountTargetElement = document.querySelector(
+  //     `#textarea-${postOrCommentId}`);
+  //   // const maxCharLimitMessage = document.getElementById(
+  //   //   `max-char-limit-${postOrCommentId}`,
+  //   // );
+
+  //   console.log("charCountTargetElement", charCountTargetElement);
+
+  //   const maxCharLimitMessage = document.querySelector(
+  //     `#max-char-limit-${postOrCommentId}`);
+
+  //     console.log("maxCharLimitMessage", maxCharLimitMessage);
+
+  //   charCountTargetElement.addEventListener("input", () => {
+  //     const charCount = charCountTargetElement.value.length;
+  //     console.log("charCount === ", charCount);
+      
+  //     maxCharLimitMessage.textContent = `${charCount}/255 Characters`;
+  //   });
+  // }
+
+  function charCount(postOrCommentId, createComment) {
+    // 1. Determine which ID to use based on your condition
+    const targetId =
+      createComment === "create-comment" ? `${createComment}-${postOrCommentId}` : postOrCommentId;
+
+    // 2. Select the elements using the determined ID
+    const charCountTargetElement = document.querySelector(
+      `#textarea-${targetId}`,
     );
-    const maxCharLimitMessage = document.getElementById(
-      `max-char-limit-${postOrCommentId}`,
+    const maxCharLimitMessage = document.querySelector(
+      `#max-char-limit-${targetId}`,
     );
 
+    // 3. Optional: Add a safety check to prevent errors if elements don't exist on the page
+    if (!charCountTargetElement || !maxCharLimitMessage) {
+      console.warn(`Elements not found for ID: ${targetId}`);
+      // console.error(`Elements not found for ID: ${targetId}`);
+      return;
+    }
+
+    // 4. Log and attach the event listener once
+    console.log("charCountTargetElement", charCountTargetElement);
+    console.log("maxCharLimitMessage", maxCharLimitMessage);
+
     charCountTargetElement.addEventListener("input", () => {
-      const charCount = charCountTargetElement.value.length;
-      console.log("charCount === ", charCount);
-      
-      maxCharLimitMessage.textContent = `${charCount}/255 Characters`;
+      const currentCount = charCountTargetElement.value.length;
+      console.log("charCount === ", currentCount);
+
+      maxCharLimitMessage.textContent = `${currentCount}/255 Characters`;
     });
   }
+
 
   async function refreshPosts() {
     const postData = await getBlogPosts();
@@ -616,9 +659,12 @@ export function registerEventListeners() {
     if (form.matches(".create-comment-form")) {
       // const postId = form.id;
       const postId = form.dataset.postId;
+      const createComment = "create-comment"; // NOTE - this was added to avoid collisions that were occurring with updatePostForm textarea and one other, see renderCreateCommentForm()
 
       // const createCommentTextArea = document.querySelector(`#textarea-${postId}`);
-      const createCommentTextArea = form.querySelector(`#textarea-${postId}`);
+      const createCommentTextArea = form.querySelector(
+        `#textarea-${createComment}-${postId}`,
+      );
 
       const createCommentMessage = createCommentTextArea.value;
 
