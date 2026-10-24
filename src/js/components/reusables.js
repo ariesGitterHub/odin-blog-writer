@@ -29,3 +29,7 @@ export function createSubmitButton() {
 export function createDivRow(...additionalClasses) {
   return createElement("div", "", "row-container", ...additionalClasses);
 }
+
+export function createDivCol(...additionalClasses) {
+  return createElement("div", "", "col-container", ...additionalClasses);
+}

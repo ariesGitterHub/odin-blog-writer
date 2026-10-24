@@ -293,14 +293,39 @@ button:hover {
 /* Containers */
 
 /*** Basic Containers  */
-.row-container {
-  height: 2rem;
+/* .row-container, .col-container {
   width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   gap: var(--space-medium);
+} */
+
+.row-container {
+  height: 2rem;
+  width: 100%;
+   display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-medium);
+}
+
+.col-container {
+  height: fit-content;
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  border: var(--border-basic);
+  border-color: var(--blue);
+  border-radius: var(--spacer-big);
+  /* margin: var(--spacer-big); */
+  /* margin: 1rem; */
+  /* padding: var(--spacer-small) var(--spacer-medium); */
+  margin: 0.5rem 0;
+  padding: 0.25rem 0.5rem;
 }
 
 /*** Specific Containers  */
@@ -321,8 +346,8 @@ button:hover {
   /* margin: 30% auto; */
 }
 
-#posts {
-  display: flex;
+#posts, #admin {
+  /* display: flex; */
   flex-direction: column;
   gap: var(--spacer-big);
   /* TODO - figure below out later */
@@ -333,7 +358,15 @@ button:hover {
   padding: var(--spacer-big);
 }
 
-.post-article {
+#posts {
+  display: flex;
+}
+
+#admin {
+  display: none;
+}
+
+.post-article, .user-article {
   background-color: var(--black);
   border: var(--border-basic);
   border-color: var(--red);
@@ -615,9 +648,9 @@ textarea {
 
 /* *** Flex-box related */
 
-/* .align-items-base {
-  align-items: baseline;
-} */
+.align-items-start {
+  align-items: start;
+}
 
 .gap {
   gap: var(--spacer-big);

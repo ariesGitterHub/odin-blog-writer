@@ -455,7 +455,7 @@ export function renderDeletePostForm(postId) {
 }
 
 // Blog comment forms (on posts)
-// NOTE - This is where I was having a collision with "maxCharLimitMessage.id = `max-char-limit-${postId}`;" and "textArea.id = `textarea-${postId}`;" Both createCommentForm and updatePostForm were using this; I added createComment
+// NOTE - This is where I was having a collision with "maxCharLimitMessage.id = `max-char-limit-${postId}`;" and "textArea.id = `textarea-${postId}`;" Both createCommentForm and updatePostForm were using this; I added createComment to pad the id for both textArea and maxCharLimitMessage below
 export function renderCreateCommentForm(postId, createComment) {
   const createCommentForm = createElement("form", "", "create-comment-form");
   // createCommentForm.id = postId;
@@ -568,4 +568,23 @@ export function renderDeleteCommentForm(commentId) {
   deleteCommentForm.append(deleteCommentButton);
 
   return deleteCommentForm;
+}
+
+// Admin User Delete
+export function renderDeleteUserForm(userId) {
+  const deleteUserForm = createElement("form", "", "delete-user-form");
+  deleteUserForm.dataset.userId = userId;
+
+  const deleteUserButton = createButton(
+    "submit",
+    "Delete",
+    "",
+    "delete-user-button",
+  );
+
+  deleteUserButton.dataset.userId = userId;
+
+  deleteUserForm.append(deleteUserButton);
+
+  return deleteUserForm;
 }

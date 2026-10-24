@@ -17,6 +17,9 @@ import {
   deleteBlogComment,
 } from "./comments.js";
 
+import { getUsersForAdmin, deleteUserByAdmin } from "./admin.js";
+import { renderAdminUsers } from "./components/admin-view.js";
+
 
 import { renderHeader } from "./components/header.js";
 import { getBlogPosts } from "../js/posts.js";
@@ -29,6 +32,8 @@ export function registerEventListeners() {
 
   const headerContainer = document.querySelector("header");
   const loginContainer = document.querySelector("#login");
+  const postsContainer = document.querySelector("#posts");
+  const adminContainer = document.querySelector("#admin");
   const modalContainer = document.querySelector("#modal");
 
   // Initial splash page
@@ -50,6 +55,7 @@ export function registerEventListeners() {
   const createCommentForm = document.querySelector(".create-comment-form");
   const updateCommentForm = document.querySelector(".update-comment-form");
   const deleteCommentForm = document.querySelector(".delete-comment-form");
+  const adminDeleteUserForm = document.querySelector(".delete-user-form");
 
   // Error message divs found on various forms
   const errorMessageLogin = document.querySelector(".error-login");
@@ -289,7 +295,7 @@ export function registerEventListeners() {
         // errorMessageHeader.textContent = ""; // TODO - check this to make sure it works
         break;
 
-      case "clear-form":  // TODO - make sure these are all used
+      case "clear-form": // TODO - make sure these are all used
         // Clears all the error messages generically as a catch all button; there was an issue with errors persisting
         errorMessageProfile.textContent = "";
         errorMessageConfirmProfileDelete.textContent = "";
@@ -329,18 +335,18 @@ export function registerEventListeners() {
       case "open-new-post-form":
         openCreatePostForm(button);
         break;
-        
+
       case "cancel-new-post-form":
         cancelCreatePostForm(button);
         break;
 
       case "open-update-post-form":
         openUpdatePostForm(button);
-      break;
+        break;
 
       case "cancel-update-post-form":
         closeUpdatePostForm(button);
-      break;
+        break;
 
       case "open-create-comment-form":
         openCreateCommentForm(button);
@@ -358,25 +364,39 @@ export function registerEventListeners() {
         closeUpdateCommentForm(button);
         break;
 
-      // case "toggle-publish-unpublish":
+      case "open-admin-page":
+        console.log("open admin...");
+      // if (currentUser && currentUser.role === "ADMIN") {
+      //   adminContainer.style.display = "flex";
+      //   postsContainer.style.display = "none";
+      // } else {
+      //   adminContainer.style.display = "none";
+      //   postsContainer.style.display = "flex";
+      // }
 
-      //   break;
+      if (postsContainer.style.display === "flex") {
+        postsContainer.style.display = "none";
+        adminContainer.style.display = "flex";
+      } else {
+        postsContainer.style.display = "flex";
+        adminContainer.style.display = "none";
+      }
+        break;
 
       case "logout":
         try {
           await logout();
-          // Reset the forms so no data lingers on a subsequent viewing          
+          // Reset the forms so no data lingers on a subsequent viewing
           // loginForm.reset();
 
           console.log("Logout click");
-          
 
           // Clear the states for posts and currentUser
           state.currentUser = null;
-          state.posts = null
-          
+          state.posts = null;
+
           // loginForm.reset();
-          location.reload() // TODO - remove later
+          location.reload(); // TODO - remove later
           console.log("✋ Logged out, goodbye!");
         } catch (err) {
           console.error("Logout failed:", err);
@@ -410,7 +430,9 @@ export function registerEventListeners() {
       form !== updateCommentForm &&
       !form.matches(".update-comment-form") &&
       form !== deleteCommentForm &&
-      !form.matches(".delete-comment-form")
+      !form.matches(".delete-comment-form") &&
+      form !== adminDeleteUserForm &&
+      !form.matches(".delete-user-form")
     )
       return;
 
@@ -634,6 +656,7 @@ export function registerEventListeners() {
       }
     }
 
+    // Delete Post
     if (form.matches(".delete-post-form")) {
       // Delete Post
       // NOTE - these are hard deletes by design with no warning message
@@ -735,6 +758,33 @@ export function registerEventListeners() {
         console.log("Comment deleted", deleteCommentData);
       } catch (err) {
         console.error("Comment deletion failed:", err);
+        errorMessageHeader.textContent = err.message;
+      }
+    }
+
+    if (form.matches(".delete-user-form")) {
+      const userId = form.dataset.userId;
+
+      try {
+        const adminDeleteUserData = await deleteUserByAdmin(
+          userId,
+        );
+
+        // Refresh state.posts and posts
+        // await refreshPosts();
+
+            const usersData = await getUsersForAdmin();
+            console.log("usersData!!!!", usersData);
+            state.users = usersData.users;
+            // state.currentUser is working here
+            console.log("This is sort of vital...state.currentUser is...", state.currentUser.role);
+            
+            renderAdminUsers(state.users, state.currentUser);
+
+
+        console.log("User deleted by admin", adminDeleteUserData);
+      } catch (err) {
+        console.error("User deletion by admin failed:", err);
         errorMessageHeader.textContent = err.message;
       }
     }
