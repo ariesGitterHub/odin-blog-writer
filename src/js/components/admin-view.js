@@ -4,7 +4,7 @@ import { formatExactDate } from "../../utils/format-date.utils.js";
 import { renderDeleteUserForm } from "./forms.js";
 
 // export function loginSplash(currentUser) {
-export function renderAdminUsers(users) {
+export function renderAdminUsers(users, currentUser) {
   const adminContainer = document.querySelector("#admin");
 
   // if (currentUser && currentUser.role === "ADMIN") {
@@ -35,7 +35,17 @@ export function renderAdminUsers(users) {
     adminContainer.append(
       userArticle,
       //  updateUserArticle,
-      );
+    ); 
+
+    // if (currentUser && currentUser.role !== "ADMIN") {
+    //   return
+    // } else  {
+    //   adminContainer.append(
+    //     userArticle,
+    //     //  updateUserArticle,
+    //     );      
+    // }
+
   });
 }
 

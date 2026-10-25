@@ -77,7 +77,7 @@ async function init() {
     const postData = await getBlogPosts();
     state.posts = postData.posts;
     renderPosts(state.posts, state.currentUser);
-    console.log("HERE$$$");
+    console.log("THERE$$$");
 
     const usersData = await getUsersForAdmin();
     console.log("usersData!!!!", usersData);

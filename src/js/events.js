@@ -450,9 +450,16 @@ export function registerEventListeners() {
         state.posts = postData.posts;
 
         renderHeader(state.currentUser);
+
         renderPosts(state.posts, state.currentUser);
 
-        console.log("Create post form - after login?: ", createPostForm);
+        if (state.currentUser.role === "ADMIN") {
+          const usersData = await getUsersForAdmin();
+          state.users = usersData.users;
+          renderAdminUsers(state.users, state.currentUser);          
+        }
+
+        // console.log("Create post form - after login?: ", createPostForm);
 
         // loginForm.reset();
         errorMessageLogin.textContent = "";
