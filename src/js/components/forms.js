@@ -570,21 +570,231 @@ export function renderDeleteCommentForm(commentId) {
   return deleteCommentForm;
 }
 
-// Admin User Delete
-export function renderDeleteUserForm(userId) {
-  const deleteUserForm = createElement("form", "", "delete-user-form");
-  deleteUserForm.dataset.userId = userId;
+// Admin Delete User ... I actually need a confirmation of delete
+// export function renderAdminDeleteUserForm(userId) {
+//   const deleteUserForm = createElement("form", "", "delete-user-form");
+//   deleteUserForm.dataset.userId = userId;
 
-  const deleteUserButton = createButton(
-    "submit",
-    "Delete",
-    "",
-    "delete-user-button",
+//   const deleteUserButton = createButton(
+//     "submit",
+//     "Delete",
+//     "",
+//     "delete-user-button",
+//     "full-width",
+//   );
+
+//   // deleteUserButton.dataset.userId = userId;
+
+//   deleteUserForm.append(deleteUserButton);
+
+//   return deleteUserForm;
+// }
+
+
+// Admin Edit User
+// export function renderAdminEditUserForm(userId) {
+export function renderAdminEditUserForm() {
+  const adminEditUserForm = createElement("form", "", "admin-edit-user-form");
+  // adminEditUserForm.dataset = userId;
+
+  const titleRow = createDivRow("justify-content-start");
+
+  const gearIcon = createImage(
+    "/assets/gear-icon.svg",
+    "Gear icon",
+    "gear-icon-image",
   );
 
-  deleteUserButton.dataset.userId = userId;
+  const title = createElement("h1", "Edit User");
 
-  deleteUserForm.append(deleteUserButton);
+  const errorMessage = createElement(
+    "div",
+    "",
+    "error-admin-edit-user",
+    "error-message",
+  );
 
-  return deleteUserForm;
+  const firstNameLabel = createLabel(
+    "first-name-admin-edit-user",
+    "First Name",
+  );
+  const firstNameInput = createInput(
+    "first-name-admin-edit-user",
+    "text",
+    "first_name",
+    "",
+  );
+
+  const lastNameLabel = createLabel("last-name-admin-edit-user", "Last Name");
+  const lastNameInput = createInput(
+    "last-name-admin-edit-user",
+    "text",
+    "last_name",
+    "",
+  );
+
+  // const roleLabel = createLabel("role-admin-edit-user", "Email");
+  // const roleInput = createInput("role-admin-edit-user", "text", "role", "");
+
+  const roleLabel = createLabel("role-admin-edit-user", "Role");
+
+  // 1. Create the select element container
+  const selectRoleDropdown = document.createElement("select");
+  selectRoleDropdown.id = "role-admin-edit-user";
+  selectRoleDropdown.name = "role";
+
+  // 2. Define the data array for the options
+  const selectRoleOptions = [
+    { value: "", text: "Choose a new role" },
+    { value: "USER", text: "User (Reader Only)" },
+    { value: "WRITER", text: "Writer" },
+    { value: "ADMIN", text: "Admin" },
+  ];
+  // selectRoleOptions.id = "role-options-admin-edit-user";
+
+  // 3. Loop through data, create option elements, and add them to the select element
+  selectRoleOptions.forEach((optionData) => {
+    const option = document.createElement("option");
+    option.value = optionData.value;
+    option.textContent = optionData.text; // Prevents HTML injection bugs
+
+    selectRoleDropdown.appendChild(option);
+  });
+
+  const emailLabel = createLabel("email-admin-edit-user", "Email");
+  const emailInput = createInput("email-admin-edit-user", "email", "email", "");
+  emailInput.setAttribute("autocomplete", "username");
+
+  const passwordLabel = createLabel("password-admin-edit-user", "New Password");
+
+  const passwordRow = createDivRow();
+
+  const passwordInput = createInput(
+    "password-admin-edit-user",
+    "password",
+    "password",
+    "",
+  );
+
+  passwordInput.setAttribute("autocomplete", "new-password");
+
+  const showPasswordButton = createShowPasswordButton();
+
+  const showPasswordButtonImage = createImage(
+    "/assets/eye-off.svg",
+    "an eye icon that toggles open and closed",
+    "show-password-button-image",
+  );
+
+  showPasswordButtonImage.setAttribute(
+    "id",
+    "show-password-button-image-admin-edit-user",
+  );
+
+  const buttonRow = createDivRow("full-width", "gap", "margin-top");
+
+  const submitButton = createSubmitButton();
+  submitButton.classList.add("full-width");
+
+  // const clearButton = createClearButton();
+
+  const deleteUserButton = createButton(
+    "button",
+    "Delete",
+    "open-admin-edit-user-delete-confirmation", // This data-action triggers case of the same name in events.js
+    "admin-edit-user-delete-button",
+    "full-width",
+  );
+
+
+  // const deleteUserButton = renderAdminDeleteUserForm(userId);
+  // const deleteUserButton = renderAdminDeleteUserForm();
+
+  titleRow.append(gearIcon, title);
+
+  showPasswordButton.append(showPasswordButtonImage);
+
+  passwordRow.append(passwordInput, showPasswordButton);
+
+  buttonRow.append(
+    submitButton,
+    // clearButton,
+    // deleteProfileButton
+    deleteUserButton,
+  );
+
+  adminEditUserForm.append(
+    titleRow,
+    errorMessage,
+    firstNameLabel,
+    firstNameInput,
+    lastNameLabel,
+    lastNameInput,
+    roleLabel,
+    selectRoleDropdown,
+    emailLabel,
+    emailInput,
+    passwordLabel,
+    passwordRow,
+    buttonRow,
+  );
+
+  return adminEditUserForm;
+}
+
+export function renderConfirmAdminDeleteUserForm() {
+  // NOTE - this is hidden until deleteProfileButton is clicked
+  const confirmAdminDeleteUserForm = createElement(
+    "form",
+    "",
+    "confirm-admin-delete-user-form",
+  );
+
+  const hrLineTop = createElement("hr", "", "hr-line-warning");
+
+  const adminDeleteUserMessage = createElement(
+    "p",
+    "Are you sure that you wish to delete this user? This action is permanent.",
+    "error-form",
+    "error-message",
+  );
+
+  const errorMessage = createElement(
+    "div",
+    "",
+    "error-confirm-admin-delete-user",
+    "error-message",
+  );
+
+  const hrLineBottom = createElement("hr", "", "hr-line-warning");
+
+  // Submits the actual account profile deletion --- HERE!!!!
+  const confirmAdminDeleteUserButton = createButton(
+    "submit",
+    "Confirm",
+    "",
+    "full-width",
+  );
+
+  // Cancels account profile deletion
+  const cancelAdminDeleteUserButton = createButton(
+    "button",
+    "Cancel",
+    "close-admin-delete-user-confirmation", // This data-action triggers case of the same name in events.js
+    "full-width",
+  );
+
+  const buttonRow = createDivRow("full-width", "gap");
+
+  buttonRow.append(confirmAdminDeleteUserButton, cancelAdminDeleteUserButton);
+
+  confirmAdminDeleteUserForm.append(
+    hrLineTop,
+    adminDeleteUserMessage,
+    errorMessage,
+    hrLineBottom,
+    buttonRow,
+  );
+
+  return confirmAdminDeleteUserForm;
 }

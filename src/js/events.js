@@ -17,9 +17,14 @@ import {
   deleteBlogComment,
 } from "./comments.js";
 
-import { getUsersForAdmin, deleteUserByAdmin } from "./admin.js";
-import { renderAdminUsers } from "./components/admin-view.js";
+import {
+  getUsersForAdmin,
+  getOneUserForAdmin,
+  updateUserByAdmin,
+  deleteUserByAdmin,
+} from "./admin.js";
 
+import { renderAdminUsers } from "./components/admin-view.js";
 
 import { renderHeader } from "./components/header.js";
 import { getBlogPosts } from "../js/posts.js";
@@ -44,6 +49,10 @@ export function registerEventListeners() {
   const confirmProfileDeleteForm = document.querySelector(
     ".confirm-profile-delete-form",
   );
+  const adminEditUserForm = document.querySelector(
+    ".admin-edit-user-form",
+  );
+  const confirmAdminDeleteUserForm = document.querySelector(".confirm-admin-delete-user-form");
 
   // Header form
   const createPostForm = document.querySelector(".create-post-form");
@@ -55,19 +64,25 @@ export function registerEventListeners() {
   const createCommentForm = document.querySelector(".create-comment-form");
   const updateCommentForm = document.querySelector(".update-comment-form");
   const deleteCommentForm = document.querySelector(".delete-comment-form");
-  const adminDeleteUserForm = document.querySelector(".delete-user-form");
 
   // Error message divs found on various forms
   const errorMessageLogin = document.querySelector(".error-login");
   const errorMessageProfile = document.querySelector(".error-profile");
+  const errorMessageAdminEditUser = document.querySelector(
+    ".error-admin-edit-user",
+  );
   const errorMessageConfirmProfileDelete = document.querySelector(
     ".error-confirm-profile-delete",
+  );
+  const errorMessageAdminDeleteUser = document.querySelector(
+    ".error-confirm-admin-delete-user",
   );
   const errorMessageHeader = document.querySelector(".error-header"); // TODO - fix this for delete, need a div that can be seen without a form...
 
   // Needed for show-password-button
   const passwordLogin = document.querySelector("#password-login");
   const passwordProfile = document.querySelector("#password-profile");
+  const passwordAdminEditUser = document.querySelector("#password-admin-edit-user");
 
   // NOTE - I took the easy road and simply used the id for the DOM elements below rather than use closest or querySelectorAll
   const showPasswordButtonImageLogin = document.querySelector(
@@ -77,6 +92,9 @@ export function registerEventListeners() {
   const showPasswordButtonImageProfile = document.querySelector(
     "#show-password-button-image-profile",
   );
+  const showPasswordButtonImageAdminEditUser = document.querySelector(
+    "#show-password-button-image-admin-edit-user",
+  );
 
   // Needed for case "open-modal-profile" so that known values are show in profile fields
   const firstNameProfileInput = profileForm.querySelector(
@@ -85,6 +103,23 @@ export function registerEventListeners() {
   const lastNameProfileInput = profileForm.querySelector("#last-name-profile");
   const emailProfileInput = profileForm.querySelector("#email-profile");
   const passwordProfileInput = profileForm.querySelector("#password-profile");
+
+  // Needed for case "open-modal-admin-edit-user" so that known values are show in profile fields
+  const firstNameAdminEditUserInput = adminEditUserForm.querySelector(
+    "#first-name-admin-edit-user",
+  );
+  const lastNameAdminEditUserInput = adminEditUserForm.querySelector(
+    "#last-name-admin-edit-user",
+  );
+  const roleAdminEditUserInput = adminEditUserForm.querySelector(
+    "#role-admin-edit-user",
+  );
+  const emailAdminEditUserInput = adminEditUserForm.querySelector(
+    "#email-admin-edit-user",
+  );
+  const passwordAdminEditUserInput = adminEditUserForm.querySelector(
+    "#password-admin-edit-user",
+  );
 
   // Helper function for showing password in login and profile update forms; allows me to delete confirm password fields and reduce coding baggage
   function togglePasswordVisibility(passwordInput, eyeImage) {
@@ -276,6 +311,7 @@ export function registerEventListeners() {
       case "open-modal-profile":
         // Used to open the modal via the profile button after someone logs in, but this time only shows the profile form.
         modalContainer.style.display = "block";
+        adminEditUserForm.style.display = "none";
         profileForm.style.display = "flex";
         confirmProfileDeleteForm.style.display = "none";
         passwordProfile.type = "password";
@@ -291,6 +327,7 @@ export function registerEventListeners() {
       case "close-modal":
         modalContainer.style.display = "none";
         errorMessageProfile.textContent = "";
+        errorMessageAdminEditUser.textContent = "";
         errorMessageConfirmProfileDelete.textContent = "";
         // errorMessageHeader.textContent = ""; // TODO - check this to make sure it works
         break;
@@ -298,11 +335,13 @@ export function registerEventListeners() {
       case "clear-form": // TODO - make sure these are all used
         // Clears all the error messages generically as a catch all button; there was an issue with errors persisting
         errorMessageProfile.textContent = "";
+        errorMessageAdminEditUser.textContent = "";
         errorMessageConfirmProfileDelete.textContent = "";
         errorMessageHeader.textContent = ""; // TODO - check this to make sure it works
 
-        loginForm.reset(); // ???
+        // loginForm.reset(); // ???
         profileForm.reset();
+        adminEditUserForm.reset();
         break;
 
       case "clear-login-form":
@@ -322,6 +361,13 @@ export function registerEventListeners() {
             showPasswordButtonImageProfile,
           );
         }
+
+        if (adminEditUserForm.style.display === "flex") {
+          togglePasswordVisibility(
+            passwordAdminEditUser,
+            showPasswordButtonImageAdminEditUser,
+          );
+        }
         break;
 
       case "open-profile-delete-confirmation":
@@ -330,6 +376,17 @@ export function registerEventListeners() {
 
       case "close-profile-delete-confirmation":
         confirmProfileDeleteForm.style.display = "none";
+        break;
+
+      case "open-admin-edit-user-delete-confirmation":
+        const targetUserId = button.dataset.userId;
+       
+        confirmAdminDeleteUserForm.style.display = "block";
+        confirmAdminDeleteUserForm.dataset.userId = targetUserId;
+        break;
+
+      case "close-admin-delete-user-confirmation":
+        confirmAdminDeleteUserForm.style.display = "none";
         break;
 
       case "open-new-post-form":
@@ -366,21 +423,54 @@ export function registerEventListeners() {
 
       case "open-admin-page":
         console.log("open admin...");
-      // if (currentUser && currentUser.role === "ADMIN") {
-      //   adminContainer.style.display = "flex";
-      //   postsContainer.style.display = "none";
-      // } else {
-      //   adminContainer.style.display = "none";
-      //   postsContainer.style.display = "flex";
-      // }
+        // if (currentUser && currentUser.role === "ADMIN") {
+        //   adminContainer.style.display = "flex";
+        //   postsContainer.style.display = "none";
+        // } else {
+        //   adminContainer.style.display = "none";
+        //   postsContainer.style.display = "flex";
+        // }
+        const adminButton = document.querySelector(".admin-button");
 
-      if (postsContainer.style.display === "flex") {
-        postsContainer.style.display = "none";
-        adminContainer.style.display = "flex";
-      } else {
-        postsContainer.style.display = "flex";
-        adminContainer.style.display = "none";
-      }
+        if (postsContainer.style.display === "flex") {
+          postsContainer.style.display = "none";
+          adminContainer.style.display = "flex";
+          adminButton.style.backgroundColor = "var(--red)";
+        } else {
+          postsContainer.style.display = "flex";
+          adminContainer.style.display = "none";
+          adminButton.style.backgroundColor = "var(--gray)";
+        }
+        break;
+
+      case "open-modal-admin-edit-user-form":
+        const userId = button.dataset.userId;
+        console.log("Is this working???", userId)
+        // Pass state userId for later actions
+        adminEditUserForm.dataset.userId = userId;
+        console.log("Modal userId for admin", userId);
+
+        const adminEditUserDeleteButton = document.querySelector(".admin-edit-user-delete-button");
+        adminEditUserDeleteButton.dataset.userId = userId;
+
+        modalContainer.style.display = "block";
+        profileForm.style.display = "none";
+        adminEditUserForm.style.display = "flex";
+
+        // confirmProfileDeleteForm.style.display = "none";
+        passwordAdminEditUser.type = "password";
+        showPasswordButtonImageAdminEditUser.src = "/assets/eye-off.svg";
+
+        const adminEditUserData = await getOneUserForAdmin(userId);
+
+        console.log(adminEditUserData);
+
+        // Populates the admin edit user form fields
+        firstNameAdminEditUserInput.value = adminEditUserData.user.firstName;
+        lastNameAdminEditUserInput.value = adminEditUserData.user.lastName;
+        roleAdminEditUserInput.value = adminEditUserData.user.role;
+        emailAdminEditUserInput.value = adminEditUserData.user.email;
+        passwordAdminEditUserInput.value = "";
         break;
 
       case "logout":
@@ -431,8 +521,10 @@ export function registerEventListeners() {
       !form.matches(".update-comment-form") &&
       form !== deleteCommentForm &&
       !form.matches(".delete-comment-form") &&
-      form !== adminDeleteUserForm &&
-      !form.matches(".delete-user-form")
+      form !== adminEditUserForm &&
+      !form.matches(".admin-edit-user-form") &&
+      form !== confirmAdminDeleteUserForm &&
+      !form.matches(".confirm-admin-delete-user-form")
     )
       return;
 
@@ -769,30 +861,80 @@ export function registerEventListeners() {
       }
     }
 
-    if (form.matches(".delete-user-form")) {
+    // Admin Update User
+    if (form.matches(".admin-edit-user-form")) {
+      // HERE...
       const userId = form.dataset.userId;
+      console.log("admin-edit-user-form userId", userId);
+       try {
+         // NOTE - this is the correct data object shape that the backend needs AND expects
+         const adminEditUserData = await updateUserByAdmin(userId, {
+           first_name: firstNameAdminEditUserInput.value,
+           last_name: lastNameAdminEditUserInput.value,
+           role: roleAdminEditUserInput.value,
+           email: emailAdminEditUserInput.value,
+           password: passwordAdminEditUserInput.value,
+         });
+
+        // Update the state
+        //  state.currentUser = profileData.user;
+        const usersData = await getUsersForAdmin();
+        state.users = usersData.users;
+        renderAdminUsers(state.users, state.currentUser);
+
+        modalContainer.style.display = "none";
+        adminEditUserForm.style.display = "none";
+        confirmAdminDeleteUserForm.style.display = "none";
+        errorMessageAdminEditUser.textContent = "";
+
+         // Reset all forms
+         // loginForm.reset();
+         adminEditUserForm.reset();
+
+         console.log("😀 Admin user edit successful:", adminEditUserData);
+       } catch (err) {
+         console.error("Admin user edit failed:", err);
+         errorMessageAdminEditUser.textContent = err.message;
+       }
+    }
+
+    // Admin Delete User
+    if (form.matches(".confirm-admin-delete-user-form")) {
+      const userId = form.dataset.userId;
+      console.log("confirm-admin-delete-user-form userId", userId);
 
       try {
-        const adminDeleteUserData = await deleteUserByAdmin(
-          userId,
-        );
+        const confirmDeletion = await deleteUserByAdmin(userId);
 
         // Refresh state.posts and posts
         // await refreshPosts();
 
-            const usersData = await getUsersForAdmin();
-            console.log("usersData!!!!", usersData);
-            state.users = usersData.users;
-            // state.currentUser is working here
-            console.log("This is sort of vital...state.currentUser is...", state.currentUser.role);
-            
-            renderAdminUsers(state.users, state.currentUser);
+        // Update admin user list
+        const usersData = await getUsersForAdmin();
+        state.users = usersData.users;
+        // state.currentUser is working here
+        console.log(
+          "This is sort of vital...state.currentUser is...",
+          state.currentUser.role,
+        );
 
+        renderAdminUsers(state.users, state.currentUser);
 
-        console.log("User deleted by admin", adminDeleteUserData);
+        // Reset modalContainer and confirmProfileDeleteForm to display = none
+        modalContainer.style.display = "none";
+        adminEditUserFormDeleteForm.style.display = "none";
+        confirmAdminDeleteUserForm.style.display = "none";
+        errorMessageAdminEditUser.textContent = "";
+
+        // Reset all forms
+        // loginForm.reset();
+        // profileForm.reset();
+        adminEditUserForm.reset();
+
+        console.log("💀 User deleted by admin", confirmDeletion);
       } catch (err) {
         console.error("User deletion by admin failed:", err);
-        errorMessageHeader.textContent = err.message;
+        errorMessageAdminEditUser.textContent = err.message;
       }
     }
   })

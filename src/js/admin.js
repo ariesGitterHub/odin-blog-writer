@@ -7,6 +7,15 @@ import { get, post, put, del } from "./api.js";
 export function getUsersForAdmin() {
   return get("/api/admin/");
 }
+
+export function getOneUserForAdmin(userId) {
+  return get(`/api/admin/${userId}`);
+}
+
+export function updateUserByAdmin(userId, userData) {
+  return put(`/api/admin/${userId}`, userData);
+}
+
 export function deleteUserByAdmin(userId) {
   return del(`/api/admin/${userId}`);
 }

@@ -4,6 +4,8 @@ import {
   // renderLoginForm,
   renderProfileForm,
   renderConfirmProfileDeleteForm,
+  renderAdminEditUserForm,
+  renderConfirmAdminDeleteUserForm,
 } from "./forms.js";
 import { createDivRow } from "./reusables.js";
 
@@ -28,13 +30,17 @@ export function renderModal() {
 
   // const loginForm = renderLoginForm();
   const profileForm = renderProfileForm();
-  const profileDeleteForm = renderConfirmProfileDeleteForm();
+  const confirmProfileDeleteForm = renderConfirmProfileDeleteForm();
+  const adminEditUserForm = renderAdminEditUserForm();
+  const confirmAdminDeleteUserForm = renderConfirmAdminDeleteUserForm();
 
   modalContent.append(
     buttonRow,
     // loginForm,
     profileForm,
-    profileDeleteForm,
+    confirmProfileDeleteForm,
+    adminEditUserForm,
+    confirmAdminDeleteUserForm,
   );
   modalContainer.append(modalContent);
 }

@@ -1,7 +1,7 @@
 import { createButton, createElement } from "../templates.js";
 import { createDivRow, createDivCol } from "./reusables.js";
 import { formatExactDate } from "../../utils/format-date.utils.js";
-import { renderDeleteUserForm } from "./forms.js";
+// import { renderAdminDeleteUserForm } from "./forms.js";
 
 // export function loginSplash(currentUser) {
 export function renderAdminUsers(users, currentUser) {
@@ -56,7 +56,16 @@ function renderUser(user) {
   const userName = createElement("h2", `${user.firstName} ${user.lastName}`);
 
   const roleRow = createDivCol(); 
-  const userRole = createElement("p", `User Role: ${user.role}`);
+  const userRole = createElement("p", "User Role: ");
+  const userRoleSpan = createElement("span", user.role);
+  if (userRoleSpan.textContent === "ADMIN") {
+    userRoleSpan.style.color = "var(--yellow)";
+  }
+
+  if (userRoleSpan.textContent === "WRITER") {
+    userRoleSpan.style.color = "var(--red)";
+  }
+  userRole.append(userRoleSpan);
   roleRow.append(userRole);
 
   const emailRow = createDivCol();
@@ -100,19 +109,22 @@ function renderUser(user) {
     "margin-post-button-rows",
   );
 
+  
+
   const editUserButton = createButton(
     "button",
     "Edit",
-    "open-update-user-form", // This data-action triggers case of the same name in events.js
-    "edit-user-button",
+    "open-modal-admin-edit-user-form", // This data-action triggers case of the same name in events.js
+    // "admin-edit-user-button",
+    "open-modal-admin-edit-user",
   );
   editUserButton.dataset.userId = user.id;
 
-  const deleteUserButton = renderDeleteUserForm(user.id); 
+  // const deleteUserButton = renderAdminDeleteUserForm(user.id); 
 
   editButtonRow.append(
     editUserButton,
-     deleteUserButton,
+    //  deleteUserButton,
     );
   userArticle.append(editButtonRow);
 

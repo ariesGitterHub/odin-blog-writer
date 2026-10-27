@@ -14,7 +14,8 @@
   --white: #e9e9f1;
   /* --white: #4f4f26; */
 
-  --red: #7f3d3d;
+  --red: #ae5050;
+  /* --red: #7f3d3d; */
   /* --red: #3aa3a3; */
 
   /* --red-trans: #7f3d3dea; */
@@ -180,6 +181,15 @@ header .error-message {
   /* height: var(--font-size-title-1); */
   height: 1.25rem;
   width: auto;
+  margin: 0;
+}
+
+.gear-icon-image {
+  /* height: var(--font-size-title-1); */
+  height: 1.25rem;
+  width: auto;
+  /* background-color: var(--white); */
+  /* border-radius: var(--spacer-big); */
   margin: 0;
 }
 
@@ -477,7 +487,7 @@ label {
   font-family: var(--font-mono);
 }
 
-input {
+input, select {
   height: 1.5rem;
   width: 100%;
   background-color: var(--white);
@@ -525,7 +535,7 @@ textarea {
   padding: 0 var(--spacer-big);
 }
 
-.login-form h1, .profile-form h1 {
+.login-form h1, .profile-form h1, .admin-edit-user-form h1 {
   color: var(--white);
   font-size: var(--font-size-modal-title);
   /* margin-top: 0.5rem; */
@@ -545,7 +555,7 @@ textarea {
   justify-content: center;
 } */
 
-.profile-form {
+.profile-form, .admin-edit-user-form {
   display: none;
 }
 
@@ -564,7 +574,9 @@ textarea {
 } */
 
 .login-form .app-logo-image,
-.profile-form .app-logo-image {
+.profile-form .app-logo-image, 
+.admin-edit-user-form .gear-icon-image
+{
   /* height: var(--font-size-modal-title); */
   height: 1.65rem;
   width: auto;
@@ -582,7 +594,7 @@ textarea {
   /* margin-top: -0.5rem; */
 }
 
-.confirm-profile-delete-form {
+.confirm-profile-delete-form, .confirm-admin-delete-user-form {
   display: none;
 }
 
