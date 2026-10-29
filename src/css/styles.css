@@ -6,23 +6,20 @@
   --gray: #9c9aa7;
   --white: #e9e9f1;
   --red: #ae5050;
-  /* --red: #7f3d3d; */
   --yellow: #dfd810;
   --blue: #2e303a;
   --blue-trans: #2e303aea;
-  --blue-dk: #16171d; 
+  --blue-dk: #16171d;
   --blue-gray: #43434c;
-
 
   /*** Fonts */
   --font-heading: system-ui, "Segoe UI", Roboto, sans-serif;
   --font-mono: ui-monospace, Consolas, monospace;
   --font-sans: system-ui, "Segoe UI", Roboto, sans-serif;
-  --font-title: ;
 
   --font-size-title-1: 1.5rem;
   --font-size-title-2: 1.25rem;
-  --font-size-title-3: .75rem;
+  --font-size-title-3: 0.9rem;
   --font-size-normal: 1rem;
   --font-size-small: 0.8rem;
 
@@ -35,7 +32,7 @@
 
   /*** Spacing */
   --spacer-big: 0.5rem;
-  --space-medium: 0.25rem;
+  --spacer-medium: 0.25rem;
   --spacer-small: 0.125rem;
 
   font: 14px/145% var(--font-sans);
@@ -49,9 +46,10 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* NOTE - I like this new way I am using media queries and and handling transitions between sizings */
-
+  /*** Transition when increasing screen size and elements grow via @media below */
   transition: ease all 0.5s;
+
+  /* NOTE - I like this new way I am using media queries and and handling transitions between sizings */
 
   @media (min-width: 340px) {
     font-size: 16px;
@@ -88,8 +86,10 @@ body {
   margin: 0 auto;
 }
 
-  /* Also, below fixed those few input fields that were pushing outside the parent container's boundaries due to padding */
-*, *:before, *:after {
+/* Also, below fixed those few input fields that were pushing outside the parent container's boundaries due to padding */
+*,
+*:before,
+*:after {
   box-sizing: inherit;
 }
 
@@ -100,8 +100,9 @@ h3 {
   font-family: var(--font-heading);
 }
 
-h2, h3 {
-  font-weight: 500;  
+h2,
+h3 {
+  font-weight: 500;
 }
 
 h1 {
@@ -115,7 +116,6 @@ h2 {
 
 h3 {
   font-size: var(--font-size-title-3);
-  text-transform: uppercase;
 }
 
 h1,
@@ -123,12 +123,11 @@ h2,
 h3,
 p {
   margin: 0;
-  padding: 0
+  padding: 0;
 }
 
 header {
   display: flex;
-  /* display: none; */
   flex-direction: col;
   flex-wrap: wrap;
   align-items: center;
@@ -146,28 +145,15 @@ header .error-message {
 .sticky-header {
   position: sticky;
   top: 0;
-  /* top: var(--spacer-big); */
-  /* width: 100%; */
   /* Below fixes the issue of trying to guess what the width should be in a sticky header */
-  /* width: auto; */
-  width: auto 0;
+  width: auto;
   backdrop-filter: blur(50px);
-  /* border: none; */
 }
 
-.app-logo-image {
-  /* height: var(--font-size-title-1); */
-  height: 1.25rem;
-  width: auto;
-  margin: 0;
-}
-
+.app-logo-image,
 .gear-icon-image {
-  /* height: var(--font-size-title-1); */
   height: 1.25rem;
   width: auto;
-  /* background-color: var(--white); */
-  /* border-radius: var(--spacer-big); */
   margin: 0;
 }
 
@@ -175,7 +161,7 @@ header .error-message {
   background-color: var(--blue-dk);
   border: var(--border-basic);
   border-color: var(--red);
-  border-radius: var(--spacer-big);
+  border-radius: var(--spacer-medium);
   font-family: var(--font-heading);
 }
 
@@ -203,7 +189,7 @@ button {
   font-family: var(--font-mono);
   font-size: var(--font-size-small);
   letter-spacing: 1px;
-  padding: var(--spacer-small) var(--space-medium);
+  padding: var(--spacer-small) var(--spacer-medium);
   text-transform: uppercase;
 }
 
@@ -240,18 +226,16 @@ button:hover {
   transform: scale(1.25);
 }
 
-.show-password-button, .admin-button
- {
+.show-password-button,
+.admin-button {
   display: flex;
   border: var(--border-basic);
   border-color: var(--gray);
   border-radius: 30%;
-  /* margin-top: calc(var(--spacer-big) * -1); */
 }
 
 .show-password-button {
   background-color: var(--white);
-  /* border-color: var(--gray); */
   margin-top: calc(var(--spacer-big) * -1);
 }
 
@@ -259,15 +243,16 @@ button:hover {
   border-color: var(--red);
 }
 
+.show-password-button-image,
+.admin-button-image {
+  height: 1rem;
+  width: auto;
+}
+
 .comment-button,
 .edit-comment-button,
 .delete-comment-button {
   display: block;
-}
-
-.show-password-button-image, .admin-button-image {
-  height: 1rem;
-  width: auto;
 }
 
 .publish-post-button {
@@ -279,24 +264,14 @@ button:hover {
 }
 
 /* Containers */
-
-/* .row-container, .col-container {
+.row-container {
+  height: 2rem;
   width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: var(--space-medium);
-} */
-
-.row-container {
-  height: 2rem;
-  width: 100%;
-   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-medium);
+  gap: var(--spacer-medium);
 }
 
 .col-container {
@@ -308,36 +283,22 @@ button:hover {
   border: var(--border-basic);
   border-color: var(--blue);
   border-radius: var(--spacer-big);
-  /* margin: var(--spacer-big); */
-  /* margin: 1rem; */
-  /* padding: var(--spacer-small) var(--spacer-medium); */
   margin: 0.5rem 0;
   padding: 0.25rem 0.5rem;
 }
 
-/*** Specific Containers  */
-/* .basic-container {
-  display: flex;
-  gap: var(--spacer-big);
-} */
-
-/* Posts and Comments */
-
+/* Sections, Login, Admin, Posts (and Comments), Modal */
 #login {
-  /* height: 100vh; */
   width: auto;
   display: flex;
-  /* flex-direction: column; */
   align-items: center;
   justify-content: center;
-  /* margin: 30% auto; */
 }
 
-#posts, #admin {
-  /* display: flex; */
+#posts,
+#admin {
   flex-direction: column;
   gap: var(--spacer-big);
-  /* TODO - figure below out later */
   border: var(--border-basic);
   border-color: var(--blue);
   border-radius: var(--spacer-big);
@@ -353,11 +314,12 @@ button:hover {
   display: none;
 }
 
-.post-article, .user-article {
+.post-article,
+.user-article {
   background-color: var(--black);
   border: var(--border-basic);
   border-color: var(--red);
-  border-radius: var(--spacer-big);
+  border-radius: var(--spacer-medium);
   padding: 1rem;
   text-align: left;
   text-wrap: wrap;
@@ -376,14 +338,14 @@ button:hover {
   background-color: var(--blue-gray);
   border: var(--border-basic);
   border-color: var(--blue);
-  border-radius: var(--spacer-big);
+  border-radius: var(--spacer-medium);
   margin: var(--spacer-big);
   padding: var(--spacer-big);
 }
 
-.post-author, .time-stamp {
+.post-author,
+.time-stamp {
   font-size: var(--font-size-small);
-  /* margin: 0.35rem 0; */
   text-transform: uppercase;
 }
 
@@ -413,22 +375,21 @@ button:hover {
   font-size: var(--font-size-normal);
 }
 
-/* Modal */
-
+/*** Modal */
 #modal {
-  /* Hidden by default */
+  position: fixed; /* Stay in place */
+  top: 0;
+  left: 0;
   width: 100%; /* Full width of screen */
   height: 100%; /* Full height of screen*/
-  display: none;
-  position: fixed; /* Stay in place */
-  left: 0;
-  top: 0;
+  display: none; /* Hidden by default */
   background-color: var(--black-trans);
   overflow: auto; /* Enable scroll if needed */
   z-index: 1000;
 }
 
 .modal-content {
+  width: 75%; /* Could be more or less, depending on screen size */
   max-width: 300px;
   background-color: var(--blue-trans);
   border: var(--border-basic);
@@ -437,7 +398,6 @@ button:hover {
   /* Below represents 20% from the top and centered */
   margin: 20% auto;
   padding: 1rem;
-  width: 75%; /* Could be more or less, depending on screen size */
 
   @media (min-width: 512px) {
     max-width: 350px;
@@ -453,7 +413,6 @@ button:hover {
 }
 
 /* Forms */
-
 form {
   display: flex;
   flex-direction: column;
@@ -464,22 +423,19 @@ label {
   font-family: var(--font-mono);
 }
 
-input, select {
+input,
+select {
   height: 1.5rem;
   width: 100%;
   background-color: var(--white);
   border: var(--border-basic);
   border-color: var(--gray);
-  border-radius: var(--spacer-big);
+  border-radius: var(--spacer-medium);
   color: var(--black);
   font-size: var(--font-size-normal);
   margin-bottom: var(--spacer-big);
-  padding-left: var(--space-medium);
+  padding-left: var(--spacer-medium);
 }
-
-/* input[type=password] {
-  width: 100%;
-} */
 
 textarea {
   height: 5rem;
@@ -489,18 +445,9 @@ textarea {
   padding: var(--spacer-big);
 }
 
-/* .login-form-container {
-  height: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-} */
-
 .login-form {
   flex-grow: 1;
-  /* width: fit-content; */
   max-width: 500px;
-  display: flex;
   align-items: start;
   justify-content: center;
   gap: var(--spacer-medium);
@@ -508,73 +455,13 @@ textarea {
   border-color: var(--blue);
   border-radius: var(--spacer-big);
   margin: var(--spacer-big);
-  /* margin: auto; */
   padding: 0 var(--spacer-big);
 }
 
-.login-form h1, .profile-form h1, .admin-edit-user-form h1 {
-  color: var(--white);
-  font-size: var(--font-size-modal-title);
-  /* margin-top: 0.5rem; */
-  margin: 0;
-}
-
-/* .login-form input {
- width: 100%;
-} */
-
-/* .login-form input[type=email] {
- width: auto;
-} */
-
-/* .profile-form {
-  align-items: start;
-  justify-content: center;
-} */
-
-.profile-form, .admin-edit-user-form {
-  display: none;
-}
-
-.profile-form h1 {
-  /* color: var(--white);
-  font-size: var(--font-size-modal-title); */
-  /* margin-top: -0.125rem; */
-}
-
-/* .profile-form input {
-  width: auto;
-} */
-
-/* .profile-form input[type=password] {
-  width: 100%;
-} */
-
-.login-form .app-logo-image,
-.profile-form .app-logo-image, 
-.admin-edit-user-form .gear-icon-image
-{
-  /* height: var(--font-size-modal-title); */
-  height: 1.65rem;
-  width: auto;
-  margin-top: 0.15rem
-}
-
-.profile-form .app-logo-image {
-  /* height: var(--font-size-modal-title); */
-  /* height: 1.75rem; */
-  /* width: auto; */
-  /* margin-top: -1.25rem; */
-}
-
-.login-form button .show-password-button {
-  /* margin-top: -0.5rem; */
-}
-
-.confirm-profile-delete-form, .confirm-admin-delete-user-form {
-  display: none;
-}
-
+.profile-form,
+.admin-edit-user-form,
+.confirm-profile-delete-form,
+.confirm-admin-delete-user-form,
 .create-post-form,
 .update-post-form,
 .create-comment-form,
@@ -582,10 +469,25 @@ textarea {
   display: none;
 }
 
+.login-form h1,
+.profile-form h1,
+.admin-edit-user-form h1 {
+  color: var(--white);
+  font-size: var(--font-size-modal-title);
+  margin: 0;
+}
+
+.login-form .app-logo-image,
+.profile-form .app-logo-image,
+.admin-edit-user-form .gear-icon-image {
+  height: 1.65rem;
+  width: auto;
+  margin-top: 0.15rem;
+}
+
 .create-post-form {
   width: 100%;
   border: none;
-  color: gold;
 }
 
 .create-post-div,
@@ -595,8 +497,6 @@ textarea {
   display: flex;
   flex-direction: column;
   gap: var(--spacer-big);
-  /* margin: var(--spacer-big); */
-  
 }
 
 .create-comment-div,
@@ -606,7 +506,6 @@ textarea {
   border-radius: var(--spacer-big);
   margin: var(--spacer-big);
   padding: var(--spacer-big);
-  /* padding: var(--spacer-big); */
 }
 
 .create-post-div {
@@ -625,18 +524,12 @@ textarea {
   color: var(--yellow);
   font-family: var(--font-heading);
   font-size: var(--font-size-normal);
-  /* margin-bottom: var(--spacer-big); */
   margin: var(--spacer-big) 0;
   text-align: left;
   text-transform: uppercase;
 }
 
-/* .error-header {
-  margin-bottom: -0.5rem;
-} */
-
 /* *** Flex-box related */
-
 .align-items-start {
   align-items: start;
 }
@@ -672,11 +565,7 @@ textarea {
 .margin-bottom {
   margin-bottom: var(--spacer-big);
 }
-/* 
-.margin-top-zero {
-  margin-top: 0;
-  padding: 0;
-} */
+
 .margin-top {
   margin-top: var(--spacer-big);
 }

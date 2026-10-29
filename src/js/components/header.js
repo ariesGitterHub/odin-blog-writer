@@ -24,8 +24,6 @@ export function renderHeader(currentUser) {
   const appLogo = createImage("/favicon.svg", "Quill logo", "app-logo-image");
   const title = createElement("h1", "Bloggie Writer");
 
-  // const buttonContainer = createElement("div", "", "basic-container");
-
   const buttonContainer = createDivRow(
     "justify-content-space-between",
     "margin-bottom",
