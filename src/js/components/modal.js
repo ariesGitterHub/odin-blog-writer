@@ -22,13 +22,12 @@ export function renderModal() {
   const closeModalButton = createButton(
     "button",
     "✖",
-    "close-modal", // This data-action triggers case of the same name in events.js
+    "close-modal",
     "close-modal-button",
   );
 
   buttonRow.append(closeModalButton);
 
-  // const loginForm = renderLoginForm();
   const profileForm = renderProfileForm();
   const confirmProfileDeleteForm = renderConfirmProfileDeleteForm();
   const adminEditUserForm = renderAdminEditUserForm();
@@ -36,11 +35,11 @@ export function renderModal() {
 
   modalContent.append(
     buttonRow,
-    // loginForm,
     profileForm,
     confirmProfileDeleteForm,
     adminEditUserForm,
     confirmAdminDeleteUserForm,
   );
+
   modalContainer.append(modalContent);
 }

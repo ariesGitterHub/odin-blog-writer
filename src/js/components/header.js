@@ -1,7 +1,6 @@
 import { createButton, createElement, createImage } from "../templates.js";
 import { createDivRow } from "./reusables.js";
-import { renderCreatePostForm } from "./forms.js"
-  // const createPost = renderCreatePostForm();
+import { renderCreatePostForm } from "./forms.js";
 
 export function renderHeader(currentUser) {
   const headerContainer = document.querySelector("header");
@@ -13,12 +12,6 @@ export function renderHeader(currentUser) {
 
   // Clear the previous children
   headerContainer.replaceChildren();
-
-  // const topRow = createElement(
-  //   "div",
-  //   "",
-  //   "row-container",
-  // );
 
   const titleRow = createDivRow("justify-content-start", "margin-bottom");
   const appLogo = createImage("/favicon.svg", "Quill logo", "app-logo-image");
@@ -48,7 +41,7 @@ export function renderHeader(currentUser) {
   const profileButton = createButton(
     "button",
     "Profile",
-    "open-modal-profile", // This data-action triggers case of the same name in events.js
+    "open-modal-profile", // NOTE - this data-action triggers case of the same name in events.js; I use this set up throughout blog-reader and blog-writer
     "profile-button",
     "full-width",
   );
@@ -56,9 +49,8 @@ export function renderHeader(currentUser) {
   const adminButton = createButton(
     "button",
     "",
-    "open-admin-page", // This data-action triggers case of the same name in events.js
+    "open-admin-page",
     "admin-button",
-    // "full-width",
   );
 
   const adminButtonImage = createImage(
@@ -70,8 +62,6 @@ export function renderHeader(currentUser) {
   adminButton.append(adminButtonImage);
 
   // Below selects the appropriate authentication controls based on whether currentUser is logged in
-  // TODO - reconfigure this later for ADMIN vs WRITER
-  // function authControls(currentUser) {
   if (currentUser && currentUser.role === "ADMIN") {
     buttonContainer.append(
       newPostButton,
@@ -95,15 +85,7 @@ export function renderHeader(currentUser) {
 
   const errorMessageParagraph = createElement("p", "", "error-header");
 
-  // buttonContainer.append(...authControls);
-  // const buttonAuthControls = authControls(state.currentUser);
-
   titleRow.append(appLogo, title);
-  // topRow.append(
-  //   titleRow,
-  //   //  buttonContainer,
-  //   // buttonAuthControls,
-  // );
 
   // Create the logged in status message.
   const bottomRow = createElement("div", "", "row-container", "logged-in");
@@ -117,7 +99,6 @@ export function renderHeader(currentUser) {
 
   // Below is the for that creates new posts
   const createPostForm = renderCreatePostForm("create-post");
-  // const createPostForm = renderCreatePostForm();
 
   bottomRow.append(loginMessage);
 
@@ -125,7 +106,6 @@ export function renderHeader(currentUser) {
 
   if (currentUser) {
     headerContainer.append(
-      // topRow,
       titleRow,
       buttonContainer,
       bottomRow,

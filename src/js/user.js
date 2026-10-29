@@ -1,6 +1,6 @@
 import { put, del } from "./api.js";
 
-// NOTE - technically async is not needed below since the imported helper functions in api.js are returning the promise!!!
+// NOTE and REMINDER - technically async is not needed below since the imported helper functions in api.js are returning the promise!!!
 
 export function updateProfile(userData) {
   console.log("updateProfile arguments:", userData);
@@ -8,7 +8,7 @@ export function updateProfile(userData) {
   return put("/api/user/profile", userData);
 }
 
-// NOTE - userId is not needed here since the backend gets the ID from the authenticated JWT
+// NOTE - userId is not needed here since the backend gets the current user's ID from the authenticated JWT
 export function deleteProfile() {
   return del("/api/user/profile");
 }

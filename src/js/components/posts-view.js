@@ -1,8 +1,6 @@
 import { createButton, createElement } from "../templates.js";
 import { formatExactDate } from "../../utils/format-date.utils.js";
 import {
-  // renderLoginForm,
-  // renderCreatePostForm,
   renderUpdatePostForm,
   renderTogglePublishedForm,
   renderDeletePostForm,
@@ -11,12 +9,6 @@ import {
   renderDeleteCommentForm,
 } from "./forms.js";
 import { createDivRow } from "./reusables.js";
-
-// const userRoleMessage = createElement(
-//   "p",
-//   "☹️ Oops! It looks like you are currently a 'Bloggie Reader' user, but you aren't currently able to draft posts on 'Bloggie Writer.' You may still logout or make changes to your profile from this site.",
-//   "error-message",
-// );
 
 export function renderPosts(posts, currentUser) {
   const postsContainer = document.querySelector("#posts");
@@ -29,10 +21,13 @@ export function renderPosts(posts, currentUser) {
   postsContainer.replaceChildren();
 
   posts.forEach((post) => {
-    // postsContainer.style.border = "var(--border-basic)";
     const postArticle = renderPost(post, currentUser);
-    const updatePostArticle = renderUpdatePostForm(post.id, post.postTitle, post.postMessage)
-    // TODO - do i need both below?
+    const updatePostArticle = renderUpdatePostForm(
+      post.id,
+      post.postTitle,
+      post.postMessage,
+    );
+    // TODO - do I need both below?
     postArticle.dataset.postId = post.id;
     postArticle.id = post.id;
     postsContainer.append(postArticle, updatePostArticle);
@@ -40,11 +35,7 @@ export function renderPosts(posts, currentUser) {
 }
 
 function renderPost(post, currentUser) {
-  // This is shown normally
   const postArticle = createElement("article", "", "post-article");
-
-  // ...Unless the edit button is clicked
-  // const updateCommentForm = document.getElementById(`update-post-form-${post.id}`);
 
   const postTitle = createElement("h2", post.postTitle);
 
@@ -64,76 +55,40 @@ function renderPost(post, currentUser) {
 
   const postTimestamp = renderTimestamp(post.createdAt, post.updatedAt);
 
-  // TODO - Place below here with these selected to reestablish correct order
-    postArticle.append(
-      postTitle,
-      // postAuthor,
-      // postTimestamp,
-      postDetailsRow,
-      // editButtonRow,
-      // hrLine,
-      // postMessage,
+  postArticle.append(postTitle, postDetailsRow);
+
+  // NOTE - ownership information can be used here to conditionally render the edit button once the current-user comparison is defined.
+  if (currentUser !== null && currentUser.id === post.user.id) {
+    const editButtonRow = createDivRow(
+      "justify-content-start",
+      "margin-post-button-rows",
     );
 
-  // Ownership information can be used here to conditionally render the following buttons.
-  if (currentUser !== null && currentUser.id === post.user.id) {
+    const publishPostButton = renderTogglePublishedForm(
+      post.id,
+      post.published,
+    );
 
-  const editButtonRow = createDivRow(
-    "justify-content-start",
-    "margin-post-button-rows",
-  );
+    const editPostButton = createButton(
+      "button",
+      "Edit",
+      "open-update-post-form",
+      "edit-post-button",
+    );
+    editPostButton.dataset.postId = post.id;
 
-  const publishPostButton = renderTogglePublishedForm(post.id, post.published);
+    const deletePostButton = renderDeletePostForm(post.id);
 
-  // TODO - this is a temp dummy button
-  // const publishPostButton = createButton(
-  //   "button",
-  //   //  "Publish",
-  //    post.published === true ? "Unpublish" : "Publish",
-  //     "toggle-publish-unpublish",
-  //      "publish-post-button"
-  //     );
-
-  //   publishPostButton.dataset.commentId = post.id;
-
-  //  post.published === true
-  //    ? (publishPostButton.style.backgroundColor = "var(--black)")
-  //    : (publishPostButton.style.backgroundColor = "var(--red)");
-
-  const editPostButton = createButton(
-    "button",
-    "Edit",
-    "open-update-post-form", // This data-action triggers case of the same name in events.js
-    "edit-post-button",
-  );
-  editPostButton.dataset.postId = post.id;
-
-  // TODO - this is a temp dummy button
-  // const deletePostButton = createButton("button", "Delete", "dummy", "dummy");
-
-  const deletePostButton = renderDeletePostForm(post.id); // TODO - create this, then delete dummy button above
-
-  editButtonRow.append(publishPostButton, editPostButton, deletePostButton);
-  postArticle.append(editButtonRow);
-
-}
+    editButtonRow.append(publishPostButton, editPostButton, deletePostButton);
+    postArticle.append(editButtonRow);
+  }
   const hrLine = createElement("hr", "", "hr-line-post");
 
   const postMessage = createElement("p", post.postMessage, "post-message");
 
   postDetailsRow.append(postAuthor, postTimestamp);
 
-  // editButtonRow.append(publishPostButton, editPostButton, deletePostButton);
-
-  postArticle.append(
-    // postTitle,
-    // postAuthor,
-    // postTimestamp,
-    // postDetailsRow,
-    // editButtonRow,
-    hrLine,
-    postMessage,
-  );
+  postArticle.append(hrLine, postMessage);
 
   if (currentUser) {
     const commentButtonRow = createDivRow(
@@ -144,15 +99,15 @@ function renderPost(post, currentUser) {
     const commentButton = createButton(
       "button",
       "Comment",
-      "open-create-comment-form", // This data-action triggers case of the same name in events.js
+      "open-create-comment-form",
       "comment-button",
     );
 
     // Identify which post the button belongs to.
     commentButton.dataset.postId = post.id;
 
-    // Comment Draft DOM elements should go after comment button, and be singular
-    // The use of "create-comment" was used to avoid collisions with another form, see renderCreateCommentForm() in forms.js for more
+    // Create Comment Form DOM elements should go after comment button, and be singular
+    // NOTE - the use of "create-comment" below was used to avoid collisions with another form, see renderCreateCommentForm() in forms.js for more
     const createComment = renderCreateCommentForm(post.id, "create-comment");
 
     commentButtonRow.append(commentButton);
@@ -209,7 +164,7 @@ function renderComment(comment, currentUser) {
     const editCommentButton = createButton(
       "button",
       "Edit",
-      "open-update-comment-form", // This data-action triggers case of the same name in events.js
+      "open-update-comment-form",
       "edit-comment-button",
     );
 

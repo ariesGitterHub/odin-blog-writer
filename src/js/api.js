@@ -6,24 +6,6 @@ export async function get(endpoint) {
       credentials: "include",
     });
 
-    // NOTE - this was my prior error handling set up for all of these helpers (only keeping this comment though), review the changes and see the difference; keep for self reference
-
-    // if (!response.ok) {
-    //   throw new Error(`Request failed: ${response.status}`);
-    // }
-
-    // if (!response.ok) {
-    //   const errorData = await response.json();
-
-    //   console.log(errorData);
-
-    //   throw new Error(
-    //     // NOTE - the optional chaining (?.) prevents an error if the response doesn't contain an error property
-    //     // errorData.error?.message || `Request failed: ${response.status}`,
-    //     errorData?.message || `Request failed: ${response.status}`,
-    //   );
-    // }
-
     if (!response.ok) {
       const errorData = await response.json();
 
@@ -34,6 +16,7 @@ export async function get(endpoint) {
         // NOTE - below used || to catch all various ways the backend shapes error messages
         errorData?.message ||
           errorData.error?.message ||
+          // NOTE - Below is an optional-chaining JavaScript snippet safely extracts and formats error messages from an API response object. // It was needed for signup validation when passwords are weak
           errorData?.errors?.map((err) => err.message).join(", ") ||
           `Request failed: ${response.status}`,
       );
@@ -69,7 +52,7 @@ export async function post(endpoint, data) {
       throw new Error(
         errorData?.message ||
           errorData.error?.message ||
-          errorData?.errors?.map((err) => err.message).join(", ") || // NOTE - Relearn this!!! // Needed for signup validation when passwords are weak
+          errorData?.errors?.map((err) => err.message).join(", ") ||
           `Request failed: ${response.status}`,
       );
     }
@@ -100,7 +83,7 @@ export async function put(endpoint, data) {
       throw new Error(
         errorData?.message ||
           errorData.error?.message ||
-          errorData?.errors?.map((err) => err.message).join(", ") || // NOTE - Relearn this!!! // Needed for signup validation when passwords are weak
+          errorData?.errors?.map((err) => err.message).join(", ") ||
           `Request failed: ${response.status}`,
       );
     }

@@ -13,83 +13,46 @@ import { loginSplash } from "./js/components/login-view.js";
 import { renderAdminUsers } from "./js/components/admin-view.js";
 
 async function init() {
-  const userData = await getCurrentUser();  // userData starts as null
+  // NOTE - as per state.js, state.currentUser starts as null, and both state.posts and state.users starts as = []
+  const userData = await getCurrentUser();
   state.currentUser = userData.user;
-  state.posts = [];
-  state.users = [];
+  // state.posts = []; // TODO - delete if nothing breaks
+  // state.users = []; // TODO - delete if nothing breaks
 
-  console.log("Is this null?? ==> ", state.currentUser);
+  console.log("CHECK YO SELF...");
+  console.log("Is state.currentUser null?? ==> ", state.currentUser);
+  console.log("Is state.posts empty?? ==> ", state.posts);
+  console.log("Is state.users empty?? ==> ", state.users);
 
   if (!state.currentUser) {
     renderHeader(state.currentUser);
     loginSplash();
-    renderPosts(state.posts = [], state.currentUser = null);
-    console.log("NO! ---> state.currentUser");
-  // } else {
-  //   // if (state.currentUser) {
-  //   renderHeader(state.currentUser);
-  //   // renderAdminUsers();
-  //   const postData = await getBlogPosts();
-  //   state.posts = postData.posts;
-  //   renderPosts(state.posts, state.currentUser);   
-  //   console.log("Yes...state.currentUser")
-  // } 
-  // } else if (state.currentUser && state.currentUser.role === "WRITER") {
-  //   renderHeader(state.currentUser);
-
-  //   const postData = await getBlogPosts();
-  //   state.posts = postData.posts;
-  //   renderPosts(state.posts, state.currentUser);
-
-  //   console.log("Yes...state.currentUser");
-  } 
-  // else {
-  //   renderHeader(state.currentUser);
-
-  //   const postData = await getBlogPosts();
-  //   state.posts = postData.posts;
-  //   renderPosts(state.posts, state.currentUser);
-  //   console.log("HERE$$$");
-    
-  //   const usersData = await getUsersForAdmin();
-  //   console.log("usersData!!!!", usersData);
-  //   state.users = usersData.users;
-  //   renderAdminUsers(state.users, state.currentUser);
-  //   console.log("Yes...state.currentUser is ", state.currentUser.role);
-  // }
-  else if (state.currentUser && state.currentUser.role === "WRITER") {
+    renderPosts((state.posts = []), (state.currentUser = null));
+  } else if (state.currentUser && state.currentUser.role === "WRITER") {
     renderHeader(state.currentUser);
 
     const postData = await getBlogPosts();
     state.posts = postData.posts;
     renderPosts(state.posts, state.currentUser);
-    console.log("HERE$$$");
 
-    // const usersData = await getUsersForAdmin();
-    // console.log("usersData!!!!", usersData);
-    // state.users = usersData.users;
-    // renderAdminUsers(state.users, state.currentUser);
     console.log("Yes...state.currentUser is ", state.currentUser.role);
-  }
-  else if (state.currentUser && state.currentUser.role === "ADMIN") {
+  } else if (state.currentUser && state.currentUser.role === "ADMIN") {
     renderHeader(state.currentUser);
 
     const postData = await getBlogPosts();
     state.posts = postData.posts;
     renderPosts(state.posts, state.currentUser);
-    console.log("THERE$$$");
 
     const usersData = await getUsersForAdmin();
     console.log("usersData!!!!", usersData);
     state.users = usersData.users;
     renderAdminUsers(state.users, state.currentUser);
+
     console.log("Yes...state.currentUser is ", state.currentUser.role);
   }
 
-
   renderModal();
   renderFooter();
-
   registerEventListeners();
 }
 
