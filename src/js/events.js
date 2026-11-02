@@ -24,18 +24,15 @@ import {
   deleteUserByAdmin,
 } from "./admin.js";
 
-import { renderAdminUsers } from "./components/admin-view.js";
-
 import { renderHeader } from "./components/header.js";
+import { renderAdminUsers } from "./components/admin-view.js";
 import { getBlogPosts } from "../js/posts.js";
 import { renderPosts } from "./components/posts-view.js";
 import { state } from "./state.js";
-import { loginSplash } from "./components/login-view.js";
 
 export function registerEventListeners() {
   const app = document.querySelector("#app");
 
-  const headerContainer = document.querySelector("header");
   const loginContainer = document.querySelector("#login");
   const postsContainer = document.querySelector("#posts");
   const adminContainer = document.querySelector("#admin");
@@ -71,12 +68,6 @@ export function registerEventListeners() {
   const errorMessageAdminEditUser = document.querySelector(
     ".error-admin-edit-user",
   );
-  const errorMessageConfirmProfileDelete = document.querySelector(
-    ".error-confirm-profile-delete",
-  );
-  const errorMessageAdminDeleteUser = document.querySelector(
-    ".error-confirm-admin-delete-user",
-  );
   const errorMessageHeader = document.querySelector(".error-header"); // TODO - fix this for delete, need a div that can be seen without a form...
 
   // Needed for show-password-button
@@ -84,7 +75,7 @@ export function registerEventListeners() {
   const passwordProfile = document.querySelector("#password-profile");
   const passwordAdminEditUser = document.querySelector("#password-admin-edit-user");
 
-  // NOTE - I took the easy road and simply used the id for the DOM elements below rather than use closest or querySelectorAll
+  // NOTE - I took the easy way and simply used the id for the DOM elements below rather than use closest or querySelectorAll
   const showPasswordButtonImageLogin = document.querySelector(
     "#show-password-button-image-login",
   );
@@ -133,16 +124,12 @@ export function registerEventListeners() {
   }
 
   function openCreatePostForm(button) {
+    // NOTE - using "create-post" as the postId since this is a creation form and no existing db postId exists yet
     const postId = "create-post";
     // Using a class for this rather than an id
     const createPostForm = document.querySelector(".create-post-form");
-    
-    // createPostForm.reset();
-    createPostForm.style.display = "flex";
 
-    // TODO - after a log in, clicking to open a "new post," writing it, then submitting the new post DOES NOT submit it, there is some sort of lag..."
-    // TRYING THIS...
-    // refreshPosts()
+    createPostForm.style.display = "flex";
 
     charCount(postId);
   }
@@ -150,17 +137,14 @@ export function registerEventListeners() {
   function cancelCreatePostForm(button) {
     // Using a class for this rather than an id
     const createPostForm = document.querySelector(".create-post-form");
+
     createPostForm.style.display = "none";
     createPostForm.reset();
   }
 
   function openUpdatePostForm(button) {
-    const postId = button.dataset.postId;
-    console.log(postId);
-    
-    const updatePostForm = document.querySelector(`#update-post-form-${postId}`);
-    console.log("updatePostForm: ", updatePostForm);
-    
+    const postId = button.dataset.postId; 
+    const updatePostForm = document.querySelector(`#update-post-form-${postId}`);   
     const existingPost = document.getElementById(postId);
     
     updatePostForm.style.display = "block"; 
@@ -172,12 +156,10 @@ export function registerEventListeners() {
   function closeUpdatePostForm(button) {
     const postId = button.dataset.postId;
     const updatePostForm = document.querySelector(`#update-post-form-${postId}`);
-  
     const existingPost = document.querySelector(`#${postId}`);
 
     updatePostForm.style.display = "none"; 
     existingPost.style.display = "block"
-    // updatePostForm.reset();
   }
 
   function openCreateCommentForm(button) {
@@ -185,12 +167,11 @@ export function registerEventListeners() {
     const createComment = "create-comment";
 
     // const createCommentForm = document.getElementById(postId);
-    const createCommentForm = document.getElementById(`create-comment-form-${postId}`);
+    // const createCommentForm = document.getElementById(`create-comment-form-${postId}`);
+    const createCommentForm = document.querySelector(`#create-comment-form-${postId}`);
 
     button.style.display = "none";
     createCommentForm.style.display = "block";
-
-    // console.log("Log from openCreateCommentForm in events.js", state.currentUser);
 
     // charCount(postId);
     charCount(postId, createComment);
@@ -260,11 +241,11 @@ export function registerEventListeners() {
   // }
 
   function charCount(postOrCommentId, createComment) {
-    // 1. Determine which ID to use based on your condition
+    // Determine which ID to use based on your condition
     const targetId =
       createComment === "create-comment" ? `${createComment}-${postOrCommentId}` : postOrCommentId;
 
-    // 2. Select the elements using the determined ID
+    // Select the elements using the determined ID
     const charCountTargetElement = document.querySelector(
       `#textarea-${targetId}`,
     );
@@ -272,14 +253,14 @@ export function registerEventListeners() {
       `#max-char-limit-${targetId}`,
     );
 
-    // 3. Optional: Add a safety check to prevent errors if elements don't exist on the page
+    // Optional: Add a safety check to prevent errors if elements don't exist on the page
     if (!charCountTargetElement || !maxCharLimitMessage) {
       console.warn(`Elements not found for ID: ${targetId}`);
       // console.error(`Elements not found for ID: ${targetId}`);
       return;
     }
 
-    // 4. Log and attach the event listener once
+    // Log and attach the event listener once
     console.log("charCountTargetElement", charCountTargetElement);
     console.log("maxCharLimitMessage", maxCharLimitMessage);
 
@@ -328,15 +309,17 @@ export function registerEventListeners() {
         modalContainer.style.display = "none";
         errorMessageProfile.textContent = "";
         errorMessageAdminEditUser.textContent = "";
-        errorMessageConfirmProfileDelete.textContent = "";
+        // errorMessageConfirmProfileDelete.textContent = "";
         // errorMessageHeader.textContent = ""; // TODO - check this to make sure it works
+        confirmProfileDeleteForm.style.display = "none";
+        confirmAdminDeleteUserForm.style.display = "none";
         break;
 
       case "clear-form": // TODO - make sure these are all used
         // Clears all the error messages generically as a catch all button; there was an issue with errors persisting
         errorMessageProfile.textContent = "";
         errorMessageAdminEditUser.textContent = "";
-        errorMessageConfirmProfileDelete.textContent = "";
+        // errorMessageConfirmProfileDelete.textContent = "";
         errorMessageHeader.textContent = ""; // TODO - check this to make sure it works
 
         // loginForm.reset(); // ???
@@ -374,8 +357,9 @@ export function registerEventListeners() {
         confirmProfileDeleteForm.style.display = "block";
         break;
 
-      case "close-profile-delete-confirmation":
+      case "cancel-profile-delete-confirmation":
         confirmProfileDeleteForm.style.display = "none";
+        confirmAdminDeleteUserForm.style.display = "none";
         break;
 
       case "open-admin-edit-user-delete-confirmation":
@@ -385,7 +369,8 @@ export function registerEventListeners() {
         confirmAdminDeleteUserForm.dataset.userId = targetUserId;
         break;
 
-      case "close-admin-delete-user-confirmation":
+      case "cancel-admin-delete-user-confirmation":
+        confirmProfileDeleteForm.style.display = "none";
         confirmAdminDeleteUserForm.style.display = "none";
         break;
 
@@ -612,7 +597,7 @@ export function registerEventListeners() {
         // Reset modalContainer and confirmProfileDeleteForm to display = none
         modalContainer.style.display = "none";
         confirmProfileDeleteForm.style.display = "none";
-        errorMessageConfirmProfileDelete.textContent = "";
+        // errorMessageConfirmProfileDelete.textContent = "";
 
         // Reset all forms
         loginForm.reset();
@@ -621,7 +606,8 @@ export function registerEventListeners() {
         console.log("💀 User account deleted");
       } catch (err) {
         console.error("Profile account deletion failed:", err);
-        errorMessageConfirmProfileDelete.textContent = err.message;
+        // errorMessageConfirmProfileDelete.textContent = err.message;
+        errorMessageProfile.textContent = err.message;
       }
     }
 

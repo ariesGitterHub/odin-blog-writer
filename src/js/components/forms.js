@@ -213,15 +213,15 @@ export function renderConfirmProfileDeleteForm() {
     "p",
     "Are you sure that you wish to delete your account? This action is permanent.",
     "error-form",
-    "error-message",
+    "error-warning",
   );
 
-  const errorMessage = createElement(
-    "div",
-    "",
-    "error-confirm-profile-delete",
-    "error-message",
-  );
+  // const errorMessage = createElement(
+  //   "div",
+  //   "BAD!!! 🥵",
+  //   "error-confirm-profile-delete",
+  //   "error-message",
+  // );
 
   const hrLineBottom = createElement("hr", "", "hr-line-warning");
 
@@ -237,7 +237,7 @@ export function renderConfirmProfileDeleteForm() {
   const cancelProfileDeleteButton = createButton(
     "button",
     "Cancel",
-    "close-profile-delete-confirmation", // This data-action triggers case of the same name in events.js
+    "cancel-profile-delete-confirmation", // This data-action triggers case of the same name in events.js
     "full-width",
   );
 
@@ -248,7 +248,7 @@ export function renderConfirmProfileDeleteForm() {
   confirmProfileDeleteForm.append(
     hrLineTop,
     deleteProfileMessage,
-    errorMessage,
+    // errorMessage,
     hrLineBottom,
     buttonRow,
   );
@@ -756,15 +756,15 @@ export function renderConfirmAdminDeleteUserForm() {
     "p",
     "Are you sure that you wish to delete this user? This action is permanent.",
     "error-form",
-    "error-message",
+    "error-warning",
   );
 
-  const errorMessage = createElement(
-    "div",
-    "",
-    "error-confirm-admin-delete-user",
-    "error-message",
-  );
+  // const errorMessage = createElement(
+  //   "div",
+  //   "Bad!!! 🥵",
+  //   "error-confirm-admin-delete-user",
+  //   "error-message",
+  // );
 
   const hrLineBottom = createElement("hr", "", "hr-line-warning");
 
@@ -780,7 +780,7 @@ export function renderConfirmAdminDeleteUserForm() {
   const cancelAdminDeleteUserButton = createButton(
     "button",
     "Cancel",
-    "close-admin-delete-user-confirmation", // This data-action triggers case of the same name in events.js
+    "cancel-admin-delete-user-confirmation", // This data-action triggers case of the same name in events.js
     "full-width",
   );
 
@@ -791,7 +791,7 @@ export function renderConfirmAdminDeleteUserForm() {
   confirmAdminDeleteUserForm.append(
     hrLineTop,
     adminDeleteUserMessage,
-    errorMessage,
+    // errorMessage,
     hrLineBottom,
     buttonRow,
   );

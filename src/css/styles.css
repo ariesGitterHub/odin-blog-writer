@@ -520,13 +520,22 @@ textarea {
 /* Misc */
 
 /*** Error related  */
-.error-message {
-  color: var(--yellow);
+.error-warning, .error-message {
+  /* color: var(--yellow); */
   font-family: var(--font-heading);
   font-size: var(--font-size-normal);
   margin: var(--spacer-big) 0;
   text-align: left;
   text-transform: uppercase;
+}
+
+.error-warning {
+  color: var(--yellow);
+}
+
+.error-message {
+  color: var(--red);
+  font-weight: 700;
 }
 
 /* *** Flex-box related */
