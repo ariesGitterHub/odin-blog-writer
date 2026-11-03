@@ -1,7 +1,4 @@
-import { 
-  login,
-   logout,
-   } from "./auth.js";
+import { login, logout, getCurrentUser } from "./auth.js";
 import { updateProfile, deleteProfile } from "./user.js";
 
 import {
@@ -38,7 +35,7 @@ export function registerEventListeners() {
   const adminContainer = document.querySelector("#admin");
   const modalContainer = document.querySelector("#modal");
 
-  // Initial splash page
+  // Initial splash page with login form
   const loginForm = document.querySelector(".login-form");
 
   // Modal forms
@@ -46,45 +43,51 @@ export function registerEventListeners() {
   const confirmProfileDeleteForm = document.querySelector(
     ".confirm-profile-delete-form",
   );
-  const adminEditUserForm = document.querySelector(
-    ".admin-edit-user-form",
+  const adminEditUserForm = document.querySelector(".admin-edit-user-form");
+  const confirmAdminDeleteUserForm = document.querySelector(
+    ".confirm-admin-delete-user-form",
   );
-  const confirmAdminDeleteUserForm = document.querySelector(".confirm-admin-delete-user-form");
 
   // Header form
   const createPostForm = document.querySelector(".create-post-form");
 
   // Post-view forms
   const updatePostForm = document.querySelector(".update-post-form");
-  const togglePublishedPostForm = document.querySelector(".toggle-published-post-form");
+  const togglePublishedPostForm = document.querySelector(
+    ".toggle-published-post-form",
+  );
   const deletePostForm = document.querySelector(".delete-post-form");
   const createCommentForm = document.querySelector(".create-comment-form");
   const updateCommentForm = document.querySelector(".update-comment-form");
   const deleteCommentForm = document.querySelector(".delete-comment-form");
 
   // Error message divs found on various forms
+  // Found on login
   const errorMessageLogin = document.querySelector(".error-login");
+  // Found on modal
   const errorMessageProfile = document.querySelector(".error-profile");
   const errorMessageAdminEditUser = document.querySelector(
     ".error-admin-edit-user",
   );
-  const errorMessageHeader = document.querySelector(".error-header"); // TODO - fix this for delete, need a div that can be seen without a form...
+  // Found in header
+  const errorMessageHeader = document.querySelector(".error-header");
 
   // Needed for show-password-button
-  const passwordLogin = document.querySelector("#password-login");
-  const passwordProfile = document.querySelector("#password-profile");
-  const passwordAdminEditUser = document.querySelector("#password-admin-edit-user");
+  const passwordLogin = document.getElementById("password-login");
+  const passwordProfile = document.getElementById("password-profile");
+  const passwordAdminEditUser = document.getElementById(
+    "password-admin-edit-user",
+  );
 
   // NOTE - I took the easy way and simply used the id for the DOM elements below rather than use closest or querySelectorAll
-  const showPasswordButtonImageLogin = document.querySelector(
-    "#show-password-button-image-login",
+  const showPasswordButtonImageLogin = document.getElementById(
+    "show-password-button-image-login",
   );
-
-  const showPasswordButtonImageProfile = document.querySelector(
-    "#show-password-button-image-profile",
+  const showPasswordButtonImageProfile = document.getElementById(
+    "show-password-button-image-profile",
   );
-  const showPasswordButtonImageAdminEditUser = document.querySelector(
-    "#show-password-button-image-admin-edit-user",
+  const showPasswordButtonImageAdminEditUser = document.getElementById(
+    "show-password-button-image-admin-edit-user",
   );
 
   // Needed for case "open-modal-profile" so that known values are show in profile fields
@@ -126,6 +129,7 @@ export function registerEventListeners() {
   function openCreatePostForm(button) {
     // NOTE - using "create-post" as the postId since this is a creation form and no existing db postId exists yet
     const postId = "create-post";
+
     // Using a class for this rather than an id
     const createPostForm = document.querySelector(".create-post-form");
 
@@ -135,7 +139,7 @@ export function registerEventListeners() {
   }
 
   function cancelCreatePostForm(button) {
-    // Using a class for this rather than an id
+    // NOTE - using the class for this rather than the id of "create-post", the class is singular anyway
     const createPostForm = document.querySelector(".create-post-form");
 
     createPostForm.style.display = "none";
@@ -143,44 +147,52 @@ export function registerEventListeners() {
   }
 
   function openUpdatePostForm(button) {
-    const postId = button.dataset.postId; 
-    const updatePostForm = document.querySelector(`#update-post-form-${postId}`);   
+    const postId = button.dataset.postId;
+
+    const updatePostForm = document.getElementById(
+      `update-post-form-${postId}`,
+    );
     const existingPost = document.getElementById(postId);
-    
-    updatePostForm.style.display = "block"; 
-    existingPost.style.display = "none"
-  
+
+    updatePostForm.style.display = "block";
+    existingPost.style.display = "none";
+
     charCount(postId);
   }
 
   function closeUpdatePostForm(button) {
     const postId = button.dataset.postId;
-    const updatePostForm = document.querySelector(`#update-post-form-${postId}`);
-    const existingPost = document.querySelector(`#${postId}`);
 
-    updatePostForm.style.display = "none"; 
-    existingPost.style.display = "block"
+    const updatePostForm = document.getElementById(
+      `update-post-form-${postId}`,
+    );
+    const existingPost = document.getElementById(postId);
+
+    updatePostForm.style.display = "none";
+    existingPost.style.display = "block";
   }
 
   function openCreateCommentForm(button) {
     const postId = button.dataset.postId;
+
     const createComment = "create-comment";
 
-    // const createCommentForm = document.getElementById(postId);
-    // const createCommentForm = document.getElementById(`create-comment-form-${postId}`);
-    const createCommentForm = document.querySelector(`#create-comment-form-${postId}`);
+    const createCommentForm = document.getElementById(
+      `create-comment-form-${postId}`,
+    );
 
     button.style.display = "none";
     createCommentForm.style.display = "block";
 
-    // charCount(postId);
     charCount(postId, createComment);
   }
 
   function closeCreateCommentForm(button) {
     const postId = button.dataset.postId;
-    // const createCommentForm = document.getElementById(postId);
-    const createCommentForm = document.getElementById(`create-comment-form-${postId}`);
+
+    const createCommentForm = document.getElementById(
+      `create-comment-form-${postId}`,
+    );
 
     const articleContainer = button.closest(".post-article");
     const commentButton = articleContainer.querySelector(".comment-button");
@@ -191,6 +203,7 @@ export function registerEventListeners() {
 
   function openUpdateCommentForm(button) {
     const commentId = button.dataset.commentId;
+
     const existingComment = document.getElementById(commentId);
     const updateCommentForm = document.getElementById(
       `update-comment-form-${commentId}`,
@@ -204,7 +217,6 @@ export function registerEventListeners() {
 
   function closeUpdateCommentForm(button) {
     const commentId = button.dataset.commentId;
-    console.log("commentId ===", commentId);
 
     const existingComment = document.getElementById(commentId);
     const updateCommentForm = document.getElementById(
@@ -215,48 +227,24 @@ export function registerEventListeners() {
     updateCommentForm.style.display = "none";
   }
 
-  // function charCount(postOrCommentId) {
-  //   // const charCountTargetElement = document.getElementById(
-  //   //   `textarea-${postOrCommentId}`,
-  //   // );
-  //   const charCountTargetElement = document.querySelector(
-  //     `#textarea-${postOrCommentId}`);
-  //   // const maxCharLimitMessage = document.getElementById(
-  //   //   `max-char-limit-${postOrCommentId}`,
-  //   // );
-
-  //   console.log("charCountTargetElement", charCountTargetElement);
-
-  //   const maxCharLimitMessage = document.querySelector(
-  //     `#max-char-limit-${postOrCommentId}`);
-
-  //     console.log("maxCharLimitMessage", maxCharLimitMessage);
-
-  //   charCountTargetElement.addEventListener("input", () => {
-  //     const charCount = charCountTargetElement.value.length;
-  //     console.log("charCount === ", charCount);
-      
-  //     maxCharLimitMessage.textContent = `${charCount}/255 Characters`;
-  //   });
-  // }
-
   function charCount(postOrCommentId, createComment) {
     // Determine which ID to use based on your condition
     const targetId =
-      createComment === "create-comment" ? `${createComment}-${postOrCommentId}` : postOrCommentId;
+      createComment === "create-comment"
+        ? `${createComment}-${postOrCommentId}`
+        : postOrCommentId;
 
     // Select the elements using the determined ID
-    const charCountTargetElement = document.querySelector(
-      `#textarea-${targetId}`,
+    const charCountTargetElement = document.getElementById(
+      `textarea-${targetId}`,
     );
-    const maxCharLimitMessage = document.querySelector(
-      `#max-char-limit-${targetId}`,
+    const maxCharLimitMessage = document.getElementById(
+      `max-char-limit-${targetId}`,
     );
 
-    // Optional: Add a safety check to prevent errors if elements don't exist on the page
+    // NOTE - add a safety check to prevent errors if elements don't exist on the page
     if (!charCountTargetElement || !maxCharLimitMessage) {
       console.warn(`Elements not found for ID: ${targetId}`);
-      // console.error(`Elements not found for ID: ${targetId}`);
       return;
     }
 
@@ -272,12 +260,22 @@ export function registerEventListeners() {
     });
   }
 
+  // NOTE - use after user profile edit or admin user edit
+  async function refreshCurrentUserAndHeader() {
+    const currentUseData = await getCurrentUser();
+    state.currentUser = currentUseData.user;
+    renderHeader(state.currentUser);
+  }
+
+  async function refreshAdmin() {
+    const usersData = await getUsersForAdmin();
+    state.users = usersData.users;
+    renderAdminUsers(state.users, state.currentUser);
+  }
 
   async function refreshPosts() {
     const postData = await getBlogPosts();
-
     state.posts = postData.posts;
-
     renderPosts(state.posts, state.currentUser);
   }
 
@@ -290,7 +288,7 @@ export function registerEventListeners() {
 
     switch (action) {
       case "open-modal-profile":
-        // Used to open the modal via the profile button after someone logs in, but this time only shows the profile form.
+        // Used to open the modal via the profile button after someone logs in
         modalContainer.style.display = "block";
         adminEditUserForm.style.display = "none";
         profileForm.style.display = "flex";
@@ -307,28 +305,22 @@ export function registerEventListeners() {
 
       case "close-modal":
         modalContainer.style.display = "none";
-        errorMessageProfile.textContent = "";
-        errorMessageAdminEditUser.textContent = "";
-        // errorMessageConfirmProfileDelete.textContent = "";
-        // errorMessageHeader.textContent = ""; // TODO - check this to make sure it works
         confirmProfileDeleteForm.style.display = "none";
         confirmAdminDeleteUserForm.style.display = "none";
-        break;
 
-      case "clear-form": // TODO - make sure these are all used
-        // Clears all the error messages generically as a catch all button; there was an issue with errors persisting
         errorMessageProfile.textContent = "";
         errorMessageAdminEditUser.textContent = "";
-        // errorMessageConfirmProfileDelete.textContent = "";
-        errorMessageHeader.textContent = ""; // TODO - check this to make sure it works
+        break;
 
-        // loginForm.reset(); // ???
+      case "clear-form":
+        errorMessageProfile.textContent = "";
+        errorMessageAdminEditUser.textContent = "";
+
         profileForm.reset();
         adminEditUserForm.reset();
         break;
 
       case "clear-login-form":
-        // Clears all the error messages generically as a catch all button; there was an issue with errors persisting
         errorMessageLogin.textContent = "";
         loginForm.reset();
         break;
@@ -364,7 +356,7 @@ export function registerEventListeners() {
 
       case "open-admin-edit-user-delete-confirmation":
         const targetUserId = button.dataset.userId;
-       
+
         confirmAdminDeleteUserForm.style.display = "block";
         confirmAdminDeleteUserForm.dataset.userId = targetUserId;
         break;
@@ -407,14 +399,6 @@ export function registerEventListeners() {
         break;
 
       case "open-admin-page":
-        console.log("open admin...");
-        // if (currentUser && currentUser.role === "ADMIN") {
-        //   adminContainer.style.display = "flex";
-        //   postsContainer.style.display = "none";
-        // } else {
-        //   adminContainer.style.display = "none";
-        //   postsContainer.style.display = "flex";
-        // }
         const adminButton = document.querySelector(".admin-button");
 
         if (postsContainer.style.display === "flex") {
@@ -430,25 +414,23 @@ export function registerEventListeners() {
 
       case "open-modal-admin-edit-user-form":
         const userId = button.dataset.userId;
-        console.log("Is this working???", userId)
+
         // Pass state userId for later actions
         adminEditUserForm.dataset.userId = userId;
-        console.log("Modal userId for admin", userId);
 
-        const adminEditUserDeleteButton = document.querySelector(".admin-edit-user-delete-button");
+        const adminEditUserDeleteButton = document.querySelector(
+          ".admin-edit-user-delete-button",
+        );
         adminEditUserDeleteButton.dataset.userId = userId;
 
         modalContainer.style.display = "block";
         profileForm.style.display = "none";
         adminEditUserForm.style.display = "flex";
 
-        // confirmProfileDeleteForm.style.display = "none";
         passwordAdminEditUser.type = "password";
         showPasswordButtonImageAdminEditUser.src = "/assets/eye-off.svg";
 
         const adminEditUserData = await getOneUserForAdmin(userId);
-
-        console.log(adminEditUserData);
 
         // Populates the admin edit user form fields
         firstNameAdminEditUserInput.value = adminEditUserData.user.firstName;
@@ -461,17 +443,13 @@ export function registerEventListeners() {
       case "logout":
         try {
           await logout();
-          // Reset the forms so no data lingers on a subsequent viewing
-          // loginForm.reset();
-
-          console.log("Logout click");
 
           // Clear the states for posts and currentUser
           state.currentUser = null;
           state.posts = null;
 
-          // loginForm.reset();
-          location.reload(); // TODO - remove later
+          // loginForm.reset(); // NOTE - if using location.reload() below, then this reset is not needed
+          location.reload(); // TODO - remove later?
           console.log("✋ Logged out, goodbye!");
         } catch (err) {
           console.error("Logout failed:", err);
@@ -533,12 +511,9 @@ export function registerEventListeners() {
         if (state.currentUser.role === "ADMIN") {
           const usersData = await getUsersForAdmin();
           state.users = usersData.users;
-          renderAdminUsers(state.users, state.currentUser);          
+          renderAdminUsers(state.users, state.currentUser);
         }
 
-        // console.log("Create post form - after login?: ", createPostForm);
-
-        // loginForm.reset();
         errorMessageLogin.textContent = "";
         loginContainer.style.display = "none";
 
@@ -565,6 +540,9 @@ export function registerEventListeners() {
         // Refresh header
         renderHeader(state.currentUser);
 
+        // Refresh state.users and admin
+        await refreshAdmin();
+
         // Refresh state.posts and posts
         await refreshPosts();
 
@@ -572,8 +550,7 @@ export function registerEventListeners() {
 
         errorMessageProfile.textContent = "";
 
-        // Reset all forms
-        // loginForm.reset();
+        // Reset form
         profileForm.reset();
 
         console.log("😀 Profile update successful:", state.currentUser);
@@ -591,29 +568,28 @@ export function registerEventListeners() {
         state.currentUser = null;
         renderHeader(state.currentUser);
 
+        // Refresh state.users and admin
+        await refreshAdmin();
+
         // Refresh state.posts and posts
         await refreshPosts();
 
         // Reset modalContainer and confirmProfileDeleteForm to display = none
         modalContainer.style.display = "none";
         confirmProfileDeleteForm.style.display = "none";
-        // errorMessageConfirmProfileDelete.textContent = "";
 
-        // Reset all forms
+        // Reset forms
         loginForm.reset();
         profileForm.reset();
 
         console.log("💀 User account deleted");
       } catch (err) {
         console.error("Profile account deletion failed:", err);
-        // errorMessageConfirmProfileDelete.textContent = err.message;
         errorMessageProfile.textContent = err.message;
       }
     }
 
     // Create Post
-    // if (form.matches(".create-post-form")) {
-    // if (form === createPostForm) {
     if (form.matches(".create-post-form")) {
       const postId = "create-post";
 
@@ -625,8 +601,8 @@ export function registerEventListeners() {
 
       try {
         const postData = await createNewBlogPost(
-          // userId, Not needed, backend handles this
-          // postId,
+          // userId, // Not needed, backend handles this
+          // postId, // Not needed, it's a new post
           createPostTitle,
           createPostMessage,
         );
@@ -635,8 +611,8 @@ export function registerEventListeners() {
         await refreshPosts();
 
         form.style.display = "none";
-        // createPostForm.reset()
-        form.reset();
+
+        form.reset(); // Same as createPostForm.reset()
 
         console.log("Post created", postData);
       } catch (err) {
@@ -645,33 +621,23 @@ export function registerEventListeners() {
       }
     }
 
-    // Update Post 
+    // Update Post
     if (form.matches(".update-post-form")) {
       const postId = form.dataset.postId;
       console.log("This form's postId should be === ", postId);
 
-      // const updatePostTitleInput = document.getElementById(
-      //   `update-post-title-${postId}`,
-      // );
-      const updatePostTitleInput = form.querySelector(`#update-post-title-${postId}`);
+      const updatePostTitleInput = form.querySelector(
+        `#update-post-title-${postId}`,
+      );
       const updatePostTitle = updatePostTitleInput.value;
-    
 
-      // const updatePostTextArea = document.getElementById(
-      //   `textarea-${postId}`,
-      // );
       const updatePostTextArea = form.querySelector(`#textarea-${postId}`);
-
       const updatePostMessage = updatePostTextArea.value;
-      // console.log("updatePostMessage........", updatePostMessage);
-
-      // let updatePostMessageCount = updatePostMessage.length; // TODO - what is this for???
 
       try {
         const updatePostData = await editBlogPost(
           // userId, Not needed, backend handles this
           postId,
-          // updatePostTitleInput,
           updatePostTitle,
           updatePostMessage,
         );
@@ -693,7 +659,6 @@ export function registerEventListeners() {
     if (form.matches(".toggle-published-post-form")) {
       const postId = form.dataset.postId;
       console.log("This form's postId should be === ", postId);
-;
       const publishPostButton = form.querySelector(
         `#publish-post-button-${postId}`,
       );
@@ -705,26 +670,21 @@ export function registerEventListeners() {
       console.log("publishedInput value", publishedInput.checked);
 
       try {
-        // let togglePublishValue;
-
         if (publishPostButtonDataset === "true") {
           publishPostButtonDataset = "false";
           publishPostButton.textContent = "Publish";
           publishPostButton.style.backgroundColor = "var(--red)";
-          // togglePublishValue = "false";
           togglePublishValue = publishedInput.checked = false;
         } else if (publishPostButtonDataset === "false") {
           publishPostButton.dataset.published = "true";
           publishPostButton.textContent = "Unpublish";
           publishPostButton.style.backgroundColor = "var(--black)";
-          // togglePublishValue = "true";
           togglePublishValue = publishedInput.checked = true;
         }
 
         const updatePostData = await togglePublishedBlogPost(
           // userId, Not needed, backend handles this
           postId,
-          // published,
           togglePublishValue,
         );
 
@@ -743,13 +703,12 @@ export function registerEventListeners() {
 
     // Delete Post
     if (form.matches(".delete-post-form")) {
-      // Delete Post
       // NOTE - these are hard deletes by design with no warning message
       const postId = form.dataset.postId;
 
       try {
         const deletePostData = await deleteBlogPost(
-          // userId, Not needed, backend handles this
+          // userId, // Not needed, backend handles this
           postId,
         );
 
@@ -765,11 +724,9 @@ export function registerEventListeners() {
 
     // Create Comment
     if (form.matches(".create-comment-form")) {
-      // const postId = form.id;
       const postId = form.dataset.postId;
       const createComment = "create-comment"; // NOTE - this was added to avoid collisions that were occurring with updatePostForm textarea and one other, see renderCreateCommentForm()
 
-      // const createCommentTextArea = document.querySelector(`#textarea-${postId}`);
       const createCommentTextArea = form.querySelector(
         `#textarea-${createComment}-${postId}`,
       );
@@ -778,7 +735,7 @@ export function registerEventListeners() {
 
       try {
         const createCommentData = await createNewBlogComment(
-          // userId, Not needed, backend handles this
+          // userId, // Not needed, backend handles this
           postId,
           createCommentMessage,
         );
@@ -798,17 +755,15 @@ export function registerEventListeners() {
       const commentId = form.dataset.commentId;
       console.log("form.dataset.commentId === ", commentId);
 
-      // const updateCommentTextArea = document.getElementById(
-      //   `textarea-${commentId}`,
-      // );
-      const updateCommentTextArea = form.querySelector(`#textarea-${commentId}`);
+      const updateCommentTextArea = form.querySelector(
+        `#textarea-${commentId}`,
+      );
 
       const updateCommentMessage = updateCommentTextArea.value;
-      // let updateCommentMessageCount = updateCommentMessage.length;
 
       try {
         const updateCommentData = await editBlogComment(
-          // userId, Not needed, backend handles this
+          // userId, // Not needed, backend handles this
           commentId,
           updateCommentMessage,
         );
@@ -833,7 +788,7 @@ export function registerEventListeners() {
 
       try {
         const deleteCommentData = await deleteBlogComment(
-          // userId, Not needed, backend handles this
+          // userId, // Not needed, backend handles this
           commentId,
         );
 
@@ -849,39 +804,37 @@ export function registerEventListeners() {
 
     // Admin Update User
     if (form.matches(".admin-edit-user-form")) {
-      // HERE...
       const userId = form.dataset.userId;
       console.log("admin-edit-user-form userId", userId);
-       try {
-         // NOTE - this is the correct data object shape that the backend needs AND expects
-         const adminEditUserData = await updateUserByAdmin(userId, {
-           first_name: firstNameAdminEditUserInput.value,
-           last_name: lastNameAdminEditUserInput.value,
-           role: roleAdminEditUserInput.value,
-           email: emailAdminEditUserInput.value,
-           password: passwordAdminEditUserInput.value,
-         });
+      try {
+        // NOTE - this is the correct data object shape that the backend needs AND expects
+        const adminEditUserData = await updateUserByAdmin(userId, {
+          first_name: firstNameAdminEditUserInput.value,
+          last_name: lastNameAdminEditUserInput.value,
+          role: roleAdminEditUserInput.value,
+          email: emailAdminEditUserInput.value,
+          password: passwordAdminEditUserInput.value,
+        });
 
-        // Update the state
-        //  state.currentUser = profileData.user;
-        const usersData = await getUsersForAdmin();
-        state.users = usersData.users;
-        renderAdminUsers(state.users, state.currentUser);
+        // Refresh state.currentUser and the header
+        await refreshCurrentUserAndHeader();
+
+        // Refresh state.users and admin
+        await refreshAdmin();
 
         modalContainer.style.display = "none";
         adminEditUserForm.style.display = "none";
         confirmAdminDeleteUserForm.style.display = "none";
         errorMessageAdminEditUser.textContent = "";
 
-         // Reset all forms
-         // loginForm.reset();
-         adminEditUserForm.reset();
+        // Reset form
+        adminEditUserForm.reset();
 
-         console.log("😀 Admin user edit successful:", adminEditUserData);
-       } catch (err) {
-         console.error("Admin user edit failed:", err);
-         errorMessageAdminEditUser.textContent = err.message;
-       }
+        console.log("😀 Admin user edit successful:", adminEditUserData);
+      } catch (err) {
+        console.error("Admin user edit failed:", err);
+        errorMessageAdminEditUser.textContent = err.message;
+      }
     }
 
     // Admin Delete User
@@ -892,29 +845,15 @@ export function registerEventListeners() {
       try {
         const confirmDeletion = await deleteUserByAdmin(userId);
 
-        // Refresh state.posts and posts
-        // await refreshPosts();
-
-        // Update admin user list
-        const usersData = await getUsersForAdmin();
-        state.users = usersData.users;
-        // state.currentUser is working here
-        console.log(
-          "This is sort of vital...state.currentUser is...",
-          state.currentUser.role,
-        );
-
-        renderAdminUsers(state.users, state.currentUser);
+        // Refresh state.users and admin
+        await refreshAdmin();
 
         // Reset modalContainer and confirmProfileDeleteForm to display = none
         modalContainer.style.display = "none";
-        adminEditUserFormDeleteForm.style.display = "none";
         confirmAdminDeleteUserForm.style.display = "none";
         errorMessageAdminEditUser.textContent = "";
 
-        // Reset all forms
-        // loginForm.reset();
-        // profileForm.reset();
+        // Reset form
         adminEditUserForm.reset();
 
         console.log("💀 User deleted by admin", confirmDeletion);
@@ -923,5 +862,5 @@ export function registerEventListeners() {
         errorMessageAdminEditUser.textContent = err.message;
       }
     }
-  })
+  });
 }

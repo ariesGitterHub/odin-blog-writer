@@ -13,7 +13,7 @@ export function renderAdminUsers(users, currentUser) {
 
     // TODO - do i need both below?
     userArticle.dataset.userId = user.id;
-    userArticle.id = user.id;
+    // userArticle.id = user.id; // TODO - Looks like this is the one I don't need
     adminContainer.append(userArticle);
   });
 }
