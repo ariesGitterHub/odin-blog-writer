@@ -1,5 +1,3 @@
-// Import these rendering form functions to where they are needed
-
 import {
   createButton,
   createLabel,
