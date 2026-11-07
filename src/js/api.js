@@ -1,5 +1,34 @@
 const API_URL = "http://localhost:3000";
 
+// CSRF Token Helpers
+let csrfToken = null;
+
+export async function getCsrfToken() {
+  const response = await fetch(`${API_URL}/api/auth/csrf-token`, {
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    throw new Error("Unable to retrieve CSRF token");
+  }
+
+  const data = await response.json();
+
+  csrfToken = data.csrfToken;
+  console.log("csrfToken", csrfToken);
+}
+
+// NOTE - below is a guard for state-changing helpers to catch situations where the CSRF token wasn't retrieved
+function getCsrfHeaders() {
+  if (!csrfToken) {
+    throw new Error("CSRF token has not been initialized");
+  }
+
+  return {
+    "X-CSRF-Token": csrfToken,
+  };
+}
+
 export async function get(endpoint) {
   try {
     const response = await fetch(`${API_URL}${endpoint}`, {
@@ -8,7 +37,6 @@ export async function get(endpoint) {
 
     if (!response.ok) {
       const errorData = await response.json();
-
       console.log(errorData);
 
       throw new Error(
@@ -32,21 +60,20 @@ export async function get(endpoint) {
 }
 
 export async function post(endpoint, data) {
-  console.log("POST data:", data);
-
   try {
     const response = await fetch(`${API_URL}${endpoint}`, {
       method: "POST",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
+        // "X-CSRF-Token": csrfToken, // NEW! CSRF Token
+        ...getCsrfHeaders(), // NEW, add a guard to your state-changing helpers to catch situations where you haven't retrieved a CSRF token
       },
       body: JSON.stringify(data),
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-
       console.log(errorData);
 
       throw new Error(
@@ -71,13 +98,46 @@ export async function put(endpoint, data) {
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
+        // "X-CSRF-Token": csrfToken, // NEW! CSRF Token
+        ...getCsrfHeaders(), // NEW, add a guard to your state-changing helpers to catch situations where you haven't retrieved a CSRF token
       },
       body: JSON.stringify(data),
     });
 
     if (!response.ok) {
       const errorData = await response.json();
+      console.log(errorData);
 
+      throw new Error(
+        errorData?.message ||
+          errorData.error?.message ||
+          errorData?.errors?.map((err) => err.message).join(", ") ||
+          `Request failed: ${response.status}`,
+      );
+    }
+
+    return response.json();
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+export async function patch(endpoint, data) {
+  try {
+    const response = await fetch(`${API_URL}${endpoint}`, {
+      method: "PATCH",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        // "X-CSRF-Token": csrfToken, // NEW! CSRF Token
+        ...getCsrfHeaders(), // NEW, add a guard to your state-changing helpers to catch situations where you haven't retrieved a CSRF token
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
       console.log(errorData);
 
       throw new Error(
@@ -100,11 +160,16 @@ export async function del(endpoint) {
     const response = await fetch(`${API_URL}${endpoint}`, {
       method: "DELETE",
       credentials: "include",
+      headers: {
+        // "X-CSRF-Token": csrfToken, // NEW! CSRF Token
+        ...getCsrfHeaders(), // NEW, add a guard to your state-changing helpers to catch situations where you haven't retrieved a CSRF token
+      },
     });
 
     if (!response.ok) {
       const errorData = await response.json();
       console.log(errorData);
+      
       throw new Error(
         errorData?.message ||
           errorData.error?.message ||

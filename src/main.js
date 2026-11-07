@@ -1,6 +1,6 @@
 import "./css/styles.css";
 import { state } from "./js/state.js";
-
+import { getCsrfToken } from "./js/api.js";
 import { registerEventListeners } from "./js/events.js";
 import { getCurrentUser } from "./js/auth.js";
 import { getBlogPosts } from "./js/posts.js";
@@ -13,15 +13,13 @@ import { loginSplash } from "./js/components/login-view.js";
 import { renderAdminUsers } from "./js/components/admin-view.js";
 
 async function init() {
+  // NEW, add CSRF Token... await getCsrfToken() executes before users can submit login, signup, comment, or other state-changing requests.
+  await getCsrfToken();
+
   // NOTE - as per state.js, state.currentUser starts as null, and both state.posts and state.users starts as = []
-  
+
   const userData = await getCurrentUser();
   state.currentUser = userData.user;
-
-  console.log("CHECK YO SELF...");
-  console.log("Is state.currentUser null?? ==> ", state.currentUser);
-  console.log("Is state.posts empty?? ==> ", state.posts);
-  console.log("Is state.users empty?? ==> ", state.users);
 
   if (!state.currentUser) {
     renderHeader(state.currentUser);
@@ -29,14 +27,18 @@ async function init() {
     loginSplash();
 
     renderPosts((state.posts = []), (state.currentUser = null));
-    
+  } else if (state.currentUser && state.currentUser.role === "USER") {
+    // Added for USER role contingency
+    renderHeader(state.currentUser);
+
+    const postsContainer = document.querySelector("#posts");
+    postsContainer.style.border = "none";
   } else if (state.currentUser && state.currentUser.role === "WRITER") {
     renderHeader(state.currentUser);
 
     const postData = await getBlogPosts();
     state.posts = postData.posts;
     renderPosts(state.posts, state.currentUser);
-
   } else if (state.currentUser && state.currentUser.role === "ADMIN") {
     renderHeader(state.currentUser);
 

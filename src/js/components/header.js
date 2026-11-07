@@ -61,6 +61,11 @@ export function renderHeader(currentUser) {
 
   adminButton.append(adminButtonImage);
 
+  const userRoleMessage = createElement(
+    "p",
+    "Doh! Something weird happened! 😣",
+  );
+
   // Below selects the appropriate authentication controls based on whether currentUser is logged in
   if (currentUser && currentUser.role === "ADMIN") {
     buttonContainer.append(
@@ -76,6 +81,7 @@ export function renderHeader(currentUser) {
   }
 
   // NOTE - I changed the backend to prevent "USER" role from logging in, keep below as a guard
+  // if (currentUser && currentUser.role === "USER") {
   if (currentUser && currentUser.role === "USER") {
     buttonContainer.append(logoutButton, profileButton);
   }
@@ -97,10 +103,18 @@ export function renderHeader(currentUser) {
       : "Please log in to comment.",
   );
 
+  const onlyHasUserRoleMessage = createElement("p",
+    "Sorry, insufficient authorization 😫"
+  )
+
   // Below is the for that creates new posts
   const createPostForm = renderCreatePostForm("create-post");
 
-  bottomRow.append(loginMessage);
+  if (currentUser && currentUser.role !== "USER") {
+    bottomRow.append(loginMessage);
+  } else {
+    bottomRow.append(onlyHasUserRoleMessage);
+  }
 
   errorMessage.append(errorMessageParagraph);
 

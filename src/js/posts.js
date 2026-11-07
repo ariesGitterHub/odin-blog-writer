@@ -1,8 +1,8 @@
-import { get, post, put, del } from "./api.js";
+import { get, post, put, patch, del } from "./api.js";
 
 // NOTE and REMINDER - technically async is not needed below since the imported helper functions in api.js are returning the promise!!!
 
-// TODO - remove /public below to start the ball rolling on get locking this down for just WRITER and ADMIN, but make sure that login is set up first!!!
+// NOTE - this gets all blog posts, published and unpublished, created by ADMIN and WRITER roles
 export function getBlogPosts() {
   return get("/api/posts/");
 }
@@ -24,8 +24,9 @@ export function editBlogPost(postId, postTitle, postMessage) {
   });
 }
 
+// NEW, using patch here instead of put
 export function togglePublishedBlogPost(postId, published) {
-  return put(`/api/posts/publish/${postId}`, {
+  return patch(`/api/posts/publish/${postId}`, {
     // NOTE - published is used here, again, this is a design choice
     published,
   });

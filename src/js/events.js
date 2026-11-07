@@ -249,13 +249,11 @@ export function registerEventListeners() {
     }
 
     // Log and attach the event listener once
-    console.log("charCountTargetElement", charCountTargetElement);
-    console.log("maxCharLimitMessage", maxCharLimitMessage);
+    // console.log("charCountTargetElement", charCountTargetElement);
+    // console.log("maxCharLimitMessage", maxCharLimitMessage);
 
     charCountTargetElement.addEventListener("input", () => {
       const currentCount = charCountTargetElement.value.length;
-      console.log("charCount === ", currentCount);
-
       maxCharLimitMessage.textContent = `${currentCount}/255 Characters`;
     });
   }
@@ -450,7 +448,9 @@ export function registerEventListeners() {
 
           // loginForm.reset(); // NOTE - if using location.reload() below, then this reset is not needed
           location.reload(); // TODO - remove later?
+
           console.log("✋ Logged out, goodbye!");
+
         } catch (err) {
           console.error("Logout failed:", err);
           errorMessageHeader.textContent = err.message;
@@ -518,6 +518,7 @@ export function registerEventListeners() {
         loginContainer.style.display = "none";
 
         console.log("🎈 Login successful:", state.currentUser);
+
       } catch (err) {
         console.error("Login failed:", err);
         errorMessageLogin.textContent = err.message;
@@ -554,6 +555,7 @@ export function registerEventListeners() {
         profileForm.reset();
 
         console.log("😀 Profile update successful:", state.currentUser);
+
       } catch (err) {
         console.error("Profile update failed:", err);
         errorMessageProfile.textContent = err.message;
@@ -583,6 +585,7 @@ export function registerEventListeners() {
         profileForm.reset();
 
         console.log("💀 User account deleted");
+
       } catch (err) {
         console.error("Profile account deletion failed:", err);
         errorMessageProfile.textContent = err.message;
@@ -614,7 +617,6 @@ export function registerEventListeners() {
 
         form.reset(); // Same as createPostForm.reset()
 
-        console.log("Post created", postData);
       } catch (err) {
         console.error("Post creation failed:", err);
         errorMessageHeader.textContent = err.message;
@@ -624,7 +626,6 @@ export function registerEventListeners() {
     // Update Post
     if (form.matches(".update-post-form")) {
       const postId = form.dataset.postId;
-      console.log("This form's postId should be === ", postId);
 
       const updatePostTitleInput = form.querySelector(
         `#update-post-title-${postId}`,
@@ -648,7 +649,6 @@ export function registerEventListeners() {
         // Refresh state.posts and posts
         await refreshPosts();
 
-        console.log("Post update", updatePostData);
       } catch (err) {
         console.error("Post update failed:", err);
         errorMessageHeader.textContent = err.message;
@@ -658,17 +658,15 @@ export function registerEventListeners() {
     // Toggle Post Publish Status
     if (form.matches(".toggle-published-post-form")) {
       const postId = form.dataset.postId;
-      console.log("This form's postId should be === ", postId);
+
       const publishPostButton = form.querySelector(
         `#publish-post-button-${postId}`,
       );
       let publishPostButtonDataset = publishPostButton.dataset.published;
-      console.log("publishPostButtonDataset", publishPostButtonDataset);
 
       const publishedInput = form.querySelector(`#published-${postId}`);
       let togglePublishValue = publishedInput.checked;
-      console.log("publishedInput value", publishedInput.checked);
-
+   
       try {
         if (publishPostButtonDataset === "true") {
           publishPostButtonDataset = "false";
@@ -694,7 +692,6 @@ export function registerEventListeners() {
         // Refresh state.posts and posts
         await refreshPosts();
 
-        console.log("Published post update", updatePostData);
       } catch (err) {
         console.error("Published post update failed:", err);
         errorMessageHeader.textContent = err.message;
@@ -715,7 +712,6 @@ export function registerEventListeners() {
         // Refresh state.posts and posts
         await refreshPosts();
 
-        console.log("Post deleted", deletePostData);
       } catch (err) {
         console.error("Post deletion failed:", err);
         errorMessageHeader.textContent = err.message;
@@ -743,7 +739,6 @@ export function registerEventListeners() {
         // Refresh state.posts and posts
         await refreshPosts();
 
-        console.log("Comment created", createCommentData);
       } catch (err) {
         console.error("Comment creation failed:", err);
         errorMessageHeader.textContent = err.message;
@@ -753,8 +748,7 @@ export function registerEventListeners() {
     // Update Comment
     if (form.matches(".update-comment-form")) {
       const commentId = form.dataset.commentId;
-      console.log("form.dataset.commentId === ", commentId);
-
+ 
       const updateCommentTextArea = form.querySelector(
         `#textarea-${commentId}`,
       );
@@ -774,7 +768,6 @@ export function registerEventListeners() {
         // Refresh state.posts and posts
         await refreshPosts();
 
-        console.log("Comment update", updateCommentData);
       } catch (err) {
         console.error("Comment update failed:", err);
         errorMessageHeader.textContent = err.message;
@@ -795,7 +788,6 @@ export function registerEventListeners() {
         // Refresh state.posts and posts
         await refreshPosts();
 
-        console.log("Comment deleted", deleteCommentData);
       } catch (err) {
         console.error("Comment deletion failed:", err);
         errorMessageHeader.textContent = err.message;
@@ -840,8 +832,7 @@ export function registerEventListeners() {
     // Admin Delete User
     if (form.matches(".confirm-admin-delete-user-form")) {
       const userId = form.dataset.userId;
-      console.log("confirm-admin-delete-user-form userId", userId);
-
+  
       try {
         const confirmDeletion = await deleteUserByAdmin(userId);
 

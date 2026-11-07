@@ -27,9 +27,9 @@ export function renderPosts(posts, currentUser) {
       post.postTitle,
       post.postMessage,
     );
-    // TODO - do I need both below? Check forms.js
-    postArticle.dataset.postId = post.id;
-    postArticle.id = post.id;
+    // TODO - do I need both of these below
+    // postArticle.dataset.postId = post.id; HERE! Is this needed???? it is looking like a no.
+    postArticle.id = post.id; // HERE! Yep, this is needed.
     postsContainer.append(postArticle, updatePostArticle);
   });
 }
