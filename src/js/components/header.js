@@ -83,7 +83,8 @@ export function renderHeader(currentUser) {
   // NOTE - I changed the backend to prevent "USER" role from logging in, keep below as a guard
   // if (currentUser && currentUser.role === "USER") {
   if (currentUser && currentUser.role === "USER") {
-    buttonContainer.append(logoutButton, profileButton);
+    // buttonContainer.append(logoutButton, profileButton);
+    buttonContainer.append(logoutButton);
   }
 
   // NOTE - I am using errorMessage and errorMessageParagraph below as catch all error message UI elements due to their noticeable location in the sticky header; this is so that the user will always be able to see it; this also lets me use a single location, making it easier to code :-)
@@ -103,9 +104,10 @@ export function renderHeader(currentUser) {
       : "Please log in to comment.",
   );
 
-  const onlyHasUserRoleMessage = createElement("p",
-    "Sorry, insufficient authorization 😫"
-  )
+  const onlyHasUserRoleMessage = createElement(
+    "p",
+    "Sorry, insufficient authorization 😫",
+  );
 
   // Below is the for that creates new posts
   const createPostForm = renderCreatePostForm("create-post");

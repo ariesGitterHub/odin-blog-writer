@@ -1,8 +1,10 @@
-import { get, post, put, del } from "./api.js";
-// get all users
-// create a user
-// update a user
-// delete a user
+import {
+  get,
+  // post,
+  // put,
+  patch,
+  del,
+} from "./api.js";
 
 export function getUsersForAdmin() {
   return get("/api/admin/");
@@ -12,8 +14,9 @@ export function getOneUserForAdmin(userId) {
   return get(`/api/admin/${userId}`);
 }
 
+// NEW, using patch here instead of put
 export function updateUserByAdmin(userId, userData) {
-  return put(`/api/admin/${userId}`, userData);
+  return patch(`/api/admin/${userId}`, userData);
 }
 
 export function deleteUserByAdmin(userId) {

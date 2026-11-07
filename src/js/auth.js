@@ -5,7 +5,8 @@ import { get, post } from "./api.js";
 export function login(email, password) {
   // NOTE - the blog writer gets its own special backend login due to only allowing roles for "ADMIN" and "WRITER"
 
-  return post("/api/auth/writer-login", { // NOTE - this is "writer-login"
+  return post("/api/auth/writer-login", {
+    // NOTE - this is "writer-login"
     email,
     password,
   });

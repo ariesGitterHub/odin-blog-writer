@@ -15,7 +15,6 @@ export async function getCsrfToken() {
   const data = await response.json();
 
   csrfToken = data.csrfToken;
-  console.log("csrfToken", csrfToken);
 }
 
 // NOTE - below is a guard for state-changing helpers to catch situations where the CSRF token wasn't retrieved
@@ -67,7 +66,7 @@ export async function post(endpoint, data) {
       headers: {
         "Content-Type": "application/json",
         // "X-CSRF-Token": csrfToken, // NEW! CSRF Token
-        ...getCsrfHeaders(), // NEW, add a guard to your state-changing helpers to catch situations where you haven't retrieved a CSRF token
+        ...getCsrfHeaders(), // NEW, instead of above, add a guard to your state-changing helpers to catch situations where you haven't retrieved a CSRF token
       },
       body: JSON.stringify(data),
     });
@@ -91,37 +90,37 @@ export async function post(endpoint, data) {
   }
 }
 
-export async function put(endpoint, data) {
-  try {
-    const response = await fetch(`${API_URL}${endpoint}`, {
-      method: "PUT",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        // "X-CSRF-Token": csrfToken, // NEW! CSRF Token
-        ...getCsrfHeaders(), // NEW, add a guard to your state-changing helpers to catch situations where you haven't retrieved a CSRF token
-      },
-      body: JSON.stringify(data),
-    });
+// export async function put(endpoint, data) {
+//   try {
+//     const response = await fetch(`${API_URL}${endpoint}`, {
+//       method: "PUT",
+//       credentials: "include",
+//       headers: {
+//         "Content-Type": "application/json",
+//         // "X-CSRF-Token": csrfToken, // NEW! CSRF Token
+//         ...getCsrfHeaders(), // NEW, instead of above, add a guard to your state-changing helpers to catch situations where you haven't retrieved a CSRF token
+//       },
+//       body: JSON.stringify(data),
+//     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.log(errorData);
+//     if (!response.ok) {
+//       const errorData = await response.json();
+//       console.log(errorData);
 
-      throw new Error(
-        errorData?.message ||
-          errorData.error?.message ||
-          errorData?.errors?.map((err) => err.message).join(", ") ||
-          `Request failed: ${response.status}`,
-      );
-    }
+//       throw new Error(
+//         errorData?.message ||
+//           errorData.error?.message ||
+//           errorData?.errors?.map((err) => err.message).join(", ") ||
+//           `Request failed: ${response.status}`,
+//       );
+//     }
 
-    return response.json();
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
-}
+//     return response.json();
+//   } catch (err) {
+//     console.error(err);
+//     throw err;
+//   }
+// }
 
 export async function patch(endpoint, data) {
   try {
@@ -131,7 +130,7 @@ export async function patch(endpoint, data) {
       headers: {
         "Content-Type": "application/json",
         // "X-CSRF-Token": csrfToken, // NEW! CSRF Token
-        ...getCsrfHeaders(), // NEW, add a guard to your state-changing helpers to catch situations where you haven't retrieved a CSRF token
+        ...getCsrfHeaders(), // NEW, instead of above, add a guard to your state-changing helpers to catch situations where you haven't retrieved a CSRF token
       },
       body: JSON.stringify(data),
     });
@@ -162,14 +161,14 @@ export async function del(endpoint) {
       credentials: "include",
       headers: {
         // "X-CSRF-Token": csrfToken, // NEW! CSRF Token
-        ...getCsrfHeaders(), // NEW, add a guard to your state-changing helpers to catch situations where you haven't retrieved a CSRF token
+        ...getCsrfHeaders(), // NEW, instead of above, add a guard to your state-changing helpers to catch situations where you haven't retrieved a CSRF token
       },
     });
 
     if (!response.ok) {
       const errorData = await response.json();
       console.log(errorData);
-      
+
       throw new Error(
         errorData?.message ||
           errorData.error?.message ||

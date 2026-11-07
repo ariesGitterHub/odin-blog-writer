@@ -1,4 +1,10 @@
-import { get, post, put, patch, del } from "./api.js";
+import {
+  get,
+  post,
+  // put,
+  patch,
+  del,
+} from "./api.js";
 
 // NOTE and REMINDER - technically async is not needed below since the imported helper functions in api.js are returning the promise!!!
 
@@ -16,8 +22,9 @@ export function createNewBlogPost(postTitle, postMessage) {
   });
 }
 
+// NEW, using patch here instead of put
 export function editBlogPost(postId, postTitle, postMessage) {
-  return put(`/api/posts/${postId}`, {
+  return patch(`/api/posts/${postId}`, {
     // NOTE - do not use published here, this is a design choice
     post_title: postTitle,
     post_message: postMessage,
