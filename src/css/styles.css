@@ -434,6 +434,9 @@ select {
   color: var(--black);
   font-size: var(--font-size-normal);
   margin-bottom: var(--spacer-big);
+}
+
+input {
   padding-left: var(--spacer-medium);
 }
 

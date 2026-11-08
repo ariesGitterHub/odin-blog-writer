@@ -254,7 +254,7 @@ export function renderCreatePostForm(postId) {
       true,
     );
 
-    postTitleInput.maxLength = 255;
+    postTitleInput.maxLength = 100;
 
     const messageRow = createDivRow("gap", "justify-content-start");
 
@@ -314,7 +314,7 @@ export function renderUpdatePostForm(postId, postTitle, postMessage) {
     "",
   );
   updatePostTitleInput.value = postTitle;
-  updatePostTitleInput.maxLength = 255;
+  updatePostTitleInput.maxLength = 100;
 
   const messageRow = createDivRow("gap", "justify-content-start");
 
@@ -560,7 +560,7 @@ export function renderAdminEditUserForm() {
 
   const roleLabel = createLabel("role-admin-edit-user", "Role");
 
-  // Create the select element container
+  // Create the select role dropdown container
   const selectRoleDropdown = document.createElement("select");
   selectRoleDropdown.id = "role-admin-edit-user";
   selectRoleDropdown.name = "role";
@@ -575,16 +575,38 @@ export function renderAdminEditUserForm() {
 
   // Loop through data, create option elements, and add them to the select element
   selectRoleOptions.forEach((optionData) => {
-    const option = document.createElement("option");
-    option.value = optionData.value;
-    option.textContent = optionData.text; // Prevents HTML injection bugs
+    const roleOption = document.createElement("option");
+    roleOption.value = optionData.value;
+    roleOption.textContent = optionData.text; // Prevents HTML injection bugs
 
-    selectRoleDropdown.appendChild(option);
+    selectRoleDropdown.appendChild(roleOption);
   });
 
   const emailLabel = createLabel("email-admin-edit-user", "Email");
   const emailInput = createInput("email-admin-edit-user", "email", "email", "");
   emailInput.setAttribute("autocomplete", "username");
+
+  // Create the select email verified dropdown container
+  const emailVerifiedLabel = createLabel("email-verified-admin-edit-user", "Email Verified");
+  const selectEmailVerifiedDropdown = document.createElement("select");
+  selectEmailVerifiedDropdown.id = "email-verified-admin-edit-user";
+  selectEmailVerifiedDropdown.name = "email_verified";
+
+  // Define the data array for the options
+  const selectEmailVerifiedOptions = [
+    { value: "", text: "Email is verified..." },
+    { value: "false", text: "🔴 False" },
+    { value: "true", text: "🟢 True" },
+  ];
+
+  // Loop through data, create option elements, and add them to the select element
+  selectEmailVerifiedOptions.forEach((optionData) => {
+    const emailVerifiedOption = document.createElement("option");
+    emailVerifiedOption.value = optionData.value;
+    emailVerifiedOption.textContent = optionData.text; // Prevents HTML injection bugs
+
+    selectEmailVerifiedDropdown.appendChild(emailVerifiedOption);
+  });
 
   const passwordLabel = createLabel("password-admin-edit-user", "New Password");
 
@@ -620,19 +642,15 @@ export function renderAdminEditUserForm() {
   const deleteUserButton = createButton(
     "button",
     "Delete",
-    "open-admin-edit-user-delete-confirmation", 
+    "open-admin-edit-user-delete-confirmation",
     "admin-edit-user-delete-button",
     "full-width",
   );
 
-
   titleRow.append(gearIcon, title);
   showPasswordButton.append(showPasswordButtonImage);
   passwordRow.append(passwordInput, showPasswordButton);
-  buttonRow.append(
-    submitButton,
-    deleteUserButton,
-  );
+  buttonRow.append(submitButton, deleteUserButton);
   adminEditUserForm.append(
     titleRow,
     errorMessage,
@@ -644,6 +662,8 @@ export function renderAdminEditUserForm() {
     selectRoleDropdown,
     emailLabel,
     emailInput,
+    emailVerifiedLabel,
+    selectEmailVerifiedDropdown,
     passwordLabel,
     passwordRow,
     buttonRow,

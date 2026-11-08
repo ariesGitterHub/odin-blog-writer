@@ -111,6 +111,9 @@ export function registerEventListeners() {
   const emailAdminEditUserInput = adminEditUserForm.querySelector(
     "#email-admin-edit-user",
   );
+  const emailVerifiedAdminEditUserInput = adminEditUserForm.querySelector(
+    "#email-verified-admin-edit-user",
+  );
   const passwordAdminEditUserInput = adminEditUserForm.querySelector(
     "#password-admin-edit-user",
   );
@@ -431,6 +434,7 @@ export function registerEventListeners() {
         lastNameAdminEditUserInput.value = adminEditUserData.user.lastName;
         roleAdminEditUserInput.value = adminEditUserData.user.role;
         emailAdminEditUserInput.value = adminEditUserData.user.email;
+        emailVerifiedAdminEditUserInput.value = adminEditUserData.user.emailVerified;
         passwordAdminEditUserInput.value = "";
         break;
 
@@ -782,7 +786,7 @@ export function registerEventListeners() {
     // Admin Update User
     if (form.matches(".admin-edit-user-form")) {
       const userId = form.dataset.userId;
-      console.log("admin-edit-user-form userId", userId);
+
       try {
         // NOTE - this is the correct data object shape that the backend needs AND expects
         const adminEditUserData = await updateUserByAdmin(userId, {
@@ -790,9 +794,10 @@ export function registerEventListeners() {
           last_name: lastNameAdminEditUserInput.value,
           role: roleAdminEditUserInput.value,
           email: emailAdminEditUserInput.value,
+          email_verified: emailVerifiedAdminEditUserInput.value,
           password: passwordAdminEditUserInput.value,
         });
-
+      
         // Refresh state.currentUser and the header
         await refreshCurrentUserAndHeader();
 
