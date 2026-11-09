@@ -521,7 +521,6 @@ textarea {
 }
 
 /* Misc */
-
 .wait-message {
   font-family: var(--font-mono);
   font-size: var(--font-size-normal);
