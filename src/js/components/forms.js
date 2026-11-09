@@ -22,6 +22,7 @@ export function renderLoginForm() {
 
   const title = createElement("h1", "Login");
 
+  const waitMessage = createElement("div", "Please be patient while the server wakes itself up.", "wait-message");
   const errorMessage = createElement("div", "", "error-login", "error-message");
 
   const emailLabel = createLabel("email-login", "Email");
@@ -77,6 +78,7 @@ export function renderLoginForm() {
 
   loginForm.append(
     titleRow,
+    waitMessage,
     errorMessage,
     emailLabel,
     emailInput,

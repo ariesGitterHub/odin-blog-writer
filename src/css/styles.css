@@ -522,9 +522,15 @@ textarea {
 
 /* Misc */
 
+.wait-message {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-normal);
+  margin-top: var(--spacer-big);
+  text-align: left;
+}
+
 /*** Error related  */
 .error-warning, .error-message {
-  /* color: var(--yellow); */
   font-family: var(--font-heading);
   font-size: var(--font-size-normal);
   margin: var(--spacer-big) 0;
