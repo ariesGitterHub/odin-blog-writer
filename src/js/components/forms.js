@@ -150,7 +150,7 @@ export function renderProfileForm() {
   const showPasswordButton = createShowPasswordButton();
 
   const showPasswordButtonImage = createImage(
-    "/assets/eye-off.svg",
+    "/public/assets/eye-off.svg",
     "an eye icon that toggles open and closed",
     "show-password-button-image",
   );
