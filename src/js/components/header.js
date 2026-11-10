@@ -14,7 +14,11 @@ export function renderHeader(currentUser) {
   headerContainer.replaceChildren();
 
   const titleRow = createDivRow("justify-content-start", "margin-bottom");
-  const appLogo = createImage("/favicon.svg", "Quill logo", "app-logo-image");
+  const appLogo = createImage(
+    "/public/favicon.svg",
+    "Quill logo",
+    "app-logo-image",
+  );
   const title = createElement("h1", "Bloggie Writer");
 
   const buttonContainer = createDivRow(
