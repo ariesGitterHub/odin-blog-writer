@@ -1,4 +1,11 @@
-const API_URL = "http://localhost:3000";
+import "dotenv/config";
+
+const API_URL =
+  process.env.NODE_ENV === "production"
+    ? process.env.BLOG_API_URL
+    : "http://localhost:3000";
+
+// const API_URL = "http://localhost:3000";
 
 // CSRF Token Helpers
 let csrfToken = null;
