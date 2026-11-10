@@ -10,8 +10,5 @@
   },
   "devDependencies": {
     "vite": "^8.3.0"
-  },
-  "dependencies": {
-    "date-fns": "^4.4.0"
   }
 }
