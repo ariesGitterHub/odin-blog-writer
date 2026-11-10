@@ -1,4 +1,4 @@
-import "./css/styles.css";
+// import "./css/styles.css"; // This only works in dev or in Vite based apps
 import { state } from "./js/state.js";
 import { getCsrfToken } from "./js/api.js";
 import { registerEventListeners } from "./js/events.js";
