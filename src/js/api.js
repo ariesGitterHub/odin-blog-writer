@@ -1,9 +1,4 @@
-import "dotenv/config";
-
-const API_URL =
-  process.env.NODE_ENV === "production"
-    ? process.env.BLOG_API_URL
-    : "http://localhost:3000";
+import { API_URL } from "/config.js";
 
 // const API_URL = "http://localhost:3000";
 

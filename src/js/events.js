@@ -122,10 +122,10 @@ export function registerEventListeners() {
   function togglePasswordVisibility(passwordInput, eyeImage) {
     if (passwordInput.type === "password") {
       passwordInput.type = "text";
-      eyeImage.src = "/assets/eye.svg";
+      eyeImage.src = "/public/assets/eye.svg";
     } else {
       passwordInput.type = "password";
-      eyeImage.src = "/assets/eye-off.svg";
+      eyeImage.src = "/public/assets/eye-off.svg";
     }
   }
 
@@ -291,7 +291,7 @@ export function registerEventListeners() {
         profileForm.style.display = "flex";
         confirmProfileDeleteForm.style.display = "none";
         passwordProfile.type = "password";
-        showPasswordButtonImageProfile.src = "/assets/eye-off.svg";
+        showPasswordButtonImageProfile.src = "/public/assets/eye-off.svg";
 
         // Populates the profile form fields
         firstNameProfileInput.value = state.currentUser.firstName;
@@ -425,7 +425,7 @@ export function registerEventListeners() {
         adminEditUserForm.style.display = "flex";
 
         passwordAdminEditUser.type = "password";
-        showPasswordButtonImageAdminEditUser.src = "/assets/eye-off.svg";
+        showPasswordButtonImageAdminEditUser.src = "/public/assets/eye-off.svg";
 
         const adminEditUserData = await getOneUserForAdmin(userId);
 

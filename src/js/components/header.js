@@ -54,7 +54,7 @@ export function renderHeader(currentUser) {
   );
 
   const adminButtonImage = createImage(
-    "/assets/gear.svg",
+    "/public/assets/gear.svg",
     "Gear icon to open admin page",
     "admin-button-image",
   );

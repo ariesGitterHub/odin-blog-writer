@@ -52,7 +52,7 @@ export function renderLoginForm() {
   const showPasswordButton = createShowPasswordButton();
 
   const showPasswordButtonImage = createImage(
-    "/assets/eye-off.svg",
+    "/public/assets/eye-off.svg",
     "an eye icon that toggles open and closed",
     "show-password-button-image",
   );
@@ -527,7 +527,7 @@ export function renderAdminEditUserForm() {
   const titleRow = createDivRow("justify-content-start");
 
   const gearIcon = createImage(
-    "/assets/gear-icon.svg",
+    "/public/assets/gear-icon.svg",
     "Gear icon",
     "gear-icon-image",
   );
@@ -626,7 +626,7 @@ export function renderAdminEditUserForm() {
   const showPasswordButton = createShowPasswordButton();
 
   const showPasswordButtonImage = createImage(
-    "/assets/eye-off.svg",
+    "/public/assets/eye-off.svg",
     "an eye icon that toggles open and closed",
     "show-password-button-image",
   );
